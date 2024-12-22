@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="module">
-      // Code golf search filter where I try to have the browser do all the work for me.
-      // Search index could come from the server in the html markup as attributes already, but that would involve escaping anything that gets put into attributes and that would mean having to html escape search words and then css escape them also. With javascript, it's safe to put any string into an attribute, and css matching against it will work just fine.
-      // Would it be faster to cache the textContent of nodes in an array, search from them and set inline styles based on matches? I don't know, maybe, but this feels more browsery and browsers are super optimized for css!
       import { filterer } from '/search.js'
-
       document.addEventListener("DOMContentLoaded", () => {
 
         let textHits = Infinity
