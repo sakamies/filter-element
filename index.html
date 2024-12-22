@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Search filter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="module">
+      // Code golf search filter where I try to have the browser do all the work for me.
+      // Search index could come from the server in the html markup as attributes already, but that would involve escaping anything that gets put into attributes and that would mean having to html escape search words and then css escape them also. With javascript, it's safe to put any string into an attribute, and css matching against it will work just fine.
+      // Would it be faster to cache the textContent of nodes in an array, search from them and set inline styles based on matches? I don't know, maybe, but this feels more browsery and browsers are super optimized for css!
+      import { filterer } from '/search.js'
+
+      document.addEventListener("DOMContentLoaded", () => {
+
+        let textHits = Infinity
+        let radioHits = Infinity
+        const renderHits = () => hits.innerHTML = Math.min(textHits, radioHits)
+
+        filterer({
+          listen: document.querySelector('#text-filter'),
+          selectors: {
+            scope: '#gifts',
+            item: 'tbody tr',
+            match: ':is(th,td)',
+            //You could make this filter not match some terms, so one filter matches only certain stuff and the other filter other stuff. Like you could make hidden terms that are not visible text, but still work as filters.
+            //match: ':is(th,td):not(:nth-child(2))',
+          },
+          callback (matches) {textHits = matches.length; renderHits()},
+        })
+
+        filterer({
+          listen: document.querySelector('#radio-filter'),
+          selectors: {
+            scope: '#gifts',
+            item: 'tbody tr',
+            match: 'td:last-child',
+          },
+          callback (matches) {radioHits = matches.length; renderHits()},
+        })
+
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Filter</h1>
+    <p>Matching rows will be shown. Matching cells will be highlighted.</p>
+
+    <p id="text-filter">
+      <label for="search">Filter by text</label>
+      <input id="search" type="search">
+    </p>
+    <fieldset id="radio-filter">
+      <legend>Filter by type</legend>
+      <input type="radio" id="state-any" name="state" checked value>
+      <label for="state-any">Any</label>
+      <input type="radio" id="state-sent" name="state" value="sent">
+      <label for="state-sent">Sent</label>
+      <input type="radio" id="state-paid" name="state" value="recieved">
+      <label for="state-paid">Recieved</label>
+      <input type="radio" id="state-late" name="state" value="late">
+      <label for="state-late">Late</label>
+    </fieldset>
+    <p aria-live="polite">
+      <span id="hits">5</span> rows
+    </p>
+
+    <table id="gifts">
+      <caption>Gifts</caption>
+      <thead>
+        <tr>
+          <th>Recipient</th>
+          <th>Gift</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>&gt;&lt;img src="hack"&gt;</td>
+          <td>Teddybear</td>
+          <td>Sent</td>
+        </tr>
+        <tr>
+          <td>Orlando Cantu</td>
+          <td>Plush kitten</td>
+          <td>Sent</td>
+        </tr>
+        <tr>
+          <td>Brian Hale</td>
+          <td>Flowers</td>
+          <td>Recieved</td>
+        </tr>
+        <tr>
+          <td>Foster Snyder</td>
+          <td>Chocolate</td>
+          <td>Late</td>
+        </tr>
+        <tr>
+          <td>Isaias Ruiz</td>
+          <td>👻🤖🎈</td>
+          <td>Recieved</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
