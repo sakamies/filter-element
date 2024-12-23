@@ -2,8 +2,10 @@
 
 Where I try to have the browser do all the work for me.
 
-The search index is built via javascript. It could come from the server in the html markup as attributes already, but that would involve escaping anything that gets put into attributes and that would mean having to html escape search words and then css escape them also. With javascript, it's safe to put any string into an attribute, and css matching against it will work just fine.
+I'm using plain old css to do the filtering. I mean I build a selector to find matches to a search query and apply the selector to a &lt;style&gt; element. No iteration of any elements in javascript necessary. You might want to inform users of the number of matches, so there's an optional callback to get the number of matches.
 
-I'm using plain old css to do the filtering. I mean I build a selector and apply it to a &lt;style&gt; element. No iteration of any elements in javascript at all after building the search index.
+Works for most inputs, but checkboxes don't work well yet.
 
-Would it be more performant to cache the textContent of nodes in an array or something like that, then search from that index and set inline styles based on matches? I don't know, maybe, but this feels more browsery and browsers are super optimized for css!
+In the example code, the search index is built with javascript. Search indexing should be rendered into the html already from the server, but this bit of javascript is to illustrate building a search index so I don't have to hand code it into this example.
+
+Would it be more performant to have some separate search index and set the hidden attribute on the searched items or something like that? I don't know, maybe, but this feels more browsery and browsers are super optimized for css!

@@ -5,32 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="module">
-      import { filterer } from '/search.js'
+      import { filterer } from '/filter.js'
       document.addEventListener("DOMContentLoaded", () => {
 
         //Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
-        Array.from(document.querySelectorAll('tbody :is(th,td)')).forEach(el => {
+        Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
           el.setAttribute('data-search', el.textContent)
         })
-        Array.from(document.querySelectorAll('tbody td:last-child')).forEach(el => {
+        Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
           el.setAttribute('data-state', el.textContent)
         })
+        Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
+          el.setAttribute('data-isteddy', el.textContent)
+        })
 
-        let textHits = Infinity
-        let radioHits = Infinity
-        const renderHits = () => hits.innerHTML = Math.min(textHits, radioHits)
+        let textHitCount = Infinity
+        let radioHitCount = Infinity
+        const renderHitCount = () => count.innerHTML = Math.min(textHitCount, radioHitCount)
 
         filterer({
           name: 'search',
-          row: '#gifts tbody tr',
-          callback (matches) {textHits = matches.length; renderHits()},
+          //names: 'search state',
+          row: 'tbody tr',
+          callback (matches) {textHitCount = matches.length; renderHitCount()},
         })
 
         filterer({
           name: 'state',
-          row: '#gifts tbody tr',
-          callback (matches) {radioHits = matches.length; renderHits()},
+          row: 'tbody tr',
+          callback (matches) {radioHitCount = matches.length; renderHitCount()},
         })
+
+        // filterer({
+        //   name: 'isteddy',
+        //   row: 'tbody tr',
+        // })
 
       });
     </script>
@@ -39,11 +48,11 @@
     <h1>Filter</h1>
     <p>Matching rows will be shown. Matching cells will be highlighted.</p>
 
-    <p id="text-filter">
+    <p>
       <label for="search">Filter by text</label>
       <input id="search" name="search" type="search">
     </p>
-    <fieldset id="radio-filter">
+    <fieldset>
       <legend>Filter by type</legend>
       <input type="radio" id="state-any" name="state" checked value>
       <label for="state-any">Any</label>
@@ -54,11 +63,15 @@
       <input type="radio" id="state-late" name="state" value="late">
       <label for="state-late">Late</label>
     </fieldset>
+    <p>
+      <input type="checkbox" id="isteddy" name="isteddy" value="teddybear">
+      <label for="isteddy">Only teddybears</label>
+    </p>
     <p aria-live="polite">
-      <span id="hits">5</span> rows
+      <span id="count">5</span> rows
     </p>
 
-    <table id="gifts">
+    <table>
       <caption>Gifts</caption>
       <thead>
         <tr>

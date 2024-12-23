@@ -7,27 +7,23 @@
  */
 
 export function filterer ({name, row, callback}) {
-  const lazy = debounce(filter, 100);
   const attribute = 'data-' + name
   const style = document.head.appendChild(document.createElement('style'))
-  style.setAttribute(attribute, '')
 
+  const lazy = debounce(filter, 100);
+  document.addEventListener('click', lazy)
   document.addEventListener('change', lazy)
   document.addEventListener('input', lazy)
-
 
   function filter (e) {
     if (e.target.name !== name) return
 
-    const words = e.target.value.split(' ').map(CSS.escape).filter(t => t != "")
-
-    // Selectors
+    const words = e.target.value.split(' ').map(CSS.escape).filter(x => x != "")
     const has = words.map(word => `:has([${attribute}*="${word}" i])`).join('')
     const nothas = `:not(${has})`
     const hide = `${row}${nothas}`
     const hilites = words.map(word => `${row} [${attribute}*="${word}" i]`)
 
-    // Write actual css
     style.innerHTML = hide + '{display: none}' + hilites.map(h => h + '{background: var(--hilite-bg)}')
 
     if (callback) {
