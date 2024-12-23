@@ -8,29 +8,27 @@
       import { filterer } from '/search.js'
       document.addEventListener("DOMContentLoaded", () => {
 
+        //Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
+        Array.from(document.querySelectorAll('tbody :is(th,td)')).forEach(el => {
+          el.setAttribute('data-search', el.textContent)
+        })
+        Array.from(document.querySelectorAll('tbody td:last-child')).forEach(el => {
+          el.setAttribute('data-state', el.textContent)
+        })
+
         let textHits = Infinity
         let radioHits = Infinity
         const renderHits = () => hits.innerHTML = Math.min(textHits, radioHits)
 
         filterer({
-          listen: document.querySelector('#text-filter'),
-          selectors: {
-            scope: '#gifts',
-            item: 'tbody tr',
-            match: ':is(th,td)',
-            //You could make this filter not match some terms, so one filter matches only certain stuff and the other filter other stuff. Like you could make hidden terms that are not visible text, but still work as filters.
-            //match: ':is(th,td):not(:nth-child(2))',
-          },
+          name: 'search',
+          row: '#gifts tbody tr',
           callback (matches) {textHits = matches.length; renderHits()},
         })
 
         filterer({
-          listen: document.querySelector('#radio-filter'),
-          selectors: {
-            scope: '#gifts',
-            item: 'tbody tr',
-            match: 'td:last-child',
-          },
+          name: 'state',
+          row: '#gifts tbody tr',
           callback (matches) {radioHits = matches.length; renderHits()},
         })
 
@@ -43,7 +41,7 @@
 
     <p id="text-filter">
       <label for="search">Filter by text</label>
-      <input id="search" type="search">
+      <input id="search" name="search" type="search">
     </p>
     <fieldset id="radio-filter">
       <legend>Filter by type</legend>
