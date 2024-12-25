@@ -5,66 +5,78 @@
  * @param {function} callback - Optional callback that will be run after every search invocation. Called with found shown items and matched terms
  */
 
-// So it's easy to change the attribute prefix everywhere
-const attr = (name) => 'data-' + name
+export class FilterAble extends HTMLElement {
+  static observedAttributes = ['form', 'row']
 
-export function filterer ({form, table, row = 'tbody td', callback}) {
-  form = document.forms[form] || document.forms[0]
-
-  //Flatten multiple same name values in form data to a single stylesheet per unique name
-  let styles = {}
-  Array.from(form.querySelectorAll('[name]')).forEach(({name}) => {styles[name] = null})
-  for (const name in styles) {
-    const attribute = attr(name)
-    styles[name] = document.head.appendChild(document.createElement('style'))
-    styles[name].setAttribute(attribute, '')
+  #form
+  get form() {
+    return document.forms[this.#form] || this.querySelector('form') || document.forms[0]
   }
 
-  const style = (name, content) => styles[name].innerHTML = content
+  #rows = 'tbody tr'
+  get rows() {
+    return this.querySelectorAll(this.#rows)
+  }
 
-  //Setup events
-  const lazy = debounce(event, 100);
-  form.addEventListener('change', lazy)
-  form.addEventListener('input', lazy)
+  constructor() {
+    super()
+  }
 
-  function event() {
+  attributeChangedCallback(name, _, value) {
+    if (name === 'form') {this.#form = value}
+    if (name === 'row') {this.#rows = value}
+  }
+
+  connectedCallback() {
+    const lazy = debounce(this.onsearch.bind(this), 100)
+    this.form.addEventListener('input', lazy)
+  }
+
+  disconnectedCallback() {
+    //TODO: what kinda cleanup needs to happen on disconnect? No idea.
+  }
+
+  onsearch(e) {
+    const rows = new Set(this.querySelectorAll(this.#rows))
+    const data = new FormData(e.target.form)
     const filters = {}
-    const data = new FormData(form)
-    //When there's multiple inputs with the same name, their values go under one key, but as a combined space delimited string of values. This makes sure multiple checkboxes with the same name are treated exactly the same as a string with spaces in a text input.
-    data.entries().forEach(([name]) => filters[name] = '')
-    data.entries().forEach(([name, value]) => filters[name] += value + ' ')
+    let found = new Set(rows)
 
-    for (const name in styles) {
-      style(name, '')
+    // Combine multiple inputs with the same name attribute under one filter as a space delimited string.
+    for (const [name, value] of data.entries()) {
+      if (filters[name]) {
+        filters[name] += ' ' + value
+      } else {
+        filters[name] = value
+      }
     }
 
-    for (name in filters) {
-      filter(name, filters[name])
+    // Query elements based on filters and have the found set contain only all elements that match all filters.
+    for (const [name, value] of Object.entries(filters)) {
+      if (value) {
+        const queried = new Set(this.queryBy(name, value))
+        found = found.intersection(queried)
+      }
     }
+
+    for (const row of rows) {
+      row.hidden = !found.has(row)
+    }
+
+    const event = new CustomEvent(
+      this.localName + ':search',
+      {bubbles: true, detail: {found}}
+    )
+    this.dispatchEvent(event)
   }
 
-  //TODO: make a custom element that takes the args like <filter-able form="form_name_here" rows="optional selector, defauls is this.querySelectorAll('tbody tr')">
-  //Set hidden attribute for rows, so they can come from server pre rendered
-  //Use url search params for filters, so they can be given in a url, persist over reloads and the form can be submitted to the server and server can render the table if needed. Progressive enhancement for the win!
-
-  function filter (name, value) {
-    value = value.trim()
-    if (!value) return
-
-    const attribute = attr(name)
-    const words = value.split(' ').map(CSS.escape)
+  queryBy(name, value) {
+    const attribute = 'data-' + this.localName + '-' + name
+    const words = value.trim().split(' ').map(CSS.escape)
     const has = words.map(word => `:has([${attribute}*="${word}" i])`).join('')
-    const nothas = `:not(${has})`
-    const hide = `${table} ${row}${nothas}`
-    const hilites = words.map(word => `${table} ${row} [${attribute}*="${word}" i]`)
-
-    style(name, hide + '{display: none}' + hilites.map(h => h + '{background: var(--hilite-bg)}'))
-
-    if (callback) {
-      const rows = document.querySelectorAll(`${table} ${row}${has}`)
-      const matches = hilites && document.querySelectorAll(hilites.join(','))
-      callback(rows, matches)
-    }
+    const match = `${this.#rows}${has}`
+    const matches = this.querySelectorAll(match)
+    return matches
   }
 }
 
@@ -76,3 +88,12 @@ function debounce (fn, delay) {
     id = setTimeout(() => fn(...args), delay)
   }
 }
+
+//Query hidden rows?
+// const nothas = `:not(${has})`
+// const hide = `${this.row}${nothas}`
+// const hidden = document.querySelectorAll(hide)
+
+//Hilite matched words?
+// const hilites = words.map(word => `${this.localName} ${row} [${attribute}*="${word}" i]`)
+// style.innerHTML = hilites.map(hilite => hilite + '{background: var(--${this.localName}-hilite)}')

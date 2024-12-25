@@ -3,13 +3,10 @@
 body {
   font-family: monospace;
   line-height: 1.5;
-  display: grid;
-  place-content: start center;
   width: 30rem;
   max-width: 100%;
   margin: auto;
   padding: 0 1rem;
-  --hilite-bg: LemonChiffon;
 }
 input:not([type="image" i], [type="range" i], [type="checkbox" i], [type="radio" i]),
 fieldset {
@@ -21,6 +18,7 @@ fieldset {
   border: 1px solid;
 }
 table {
+  width: 100%;
   margin: .5rem 0;
   border: 1px solid;
   border-collapse: collapse;

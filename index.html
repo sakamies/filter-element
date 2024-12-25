@@ -5,40 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="module">
-      import { filterer } from '/filter.js'
+      import { FilterAble } from '/filter.js'
+      customElements.define('filter-able', FilterAble);
+
       document.addEventListener("DOMContentLoaded", () => {
 
         // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
-
-        // You can search by text from any column
+        // Search by text from any column
         Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
-          el.setAttribute('data-search', el.textContent)
+          el.setAttribute('data-filter-able-search', el.textContent)
+        })
+        // Gift type and checkboxes for filters
+        Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
+          el.setAttribute('data-filter-able-gift', el.textContent)
         })
         // Last column is state
         Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
-          el.setAttribute('data-state', el.textContent)
-        })
-        // This column is for gift type and has checkboxes for filters
-        Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute('data-gift', el.textContent)
+          el.setAttribute('data-filter-able-state', el.textContent)
         })
 
-        // For simple pages with just one form for the search and a table or something. Listens to all inputs and filters selected elements based on those.
-        // filterer({selector: 'tbody tr'})
-
-        // If you have more than one form, one of which is your filterer form, you can select the form via its name or id.
-        // filterer({form: 'filter', selector: 'tbody tr'})
-
-        // If you want to do something with the found matches after a search, you can use a callback. This would log selected rows and the search terms that matched.
-        // filterer({selector: 'tbody tr', callback: console.log})
-
-        filterer({
-          form: 'filter',
-          table: '#gifts',
-          row: 'tbody tr',
-          callback (matches) {count.innerHTML = matches.length},
+        // Update found count and announce it with aria-live.
+        // Events and data-attributes are named whatever you choose as your tag name for this custom element.
+        const count = document.querySelector('#count')
+        document.addEventListener('filter-able:search', event => {
+          count.textContent = event.detail.found.size
         })
-
       });
     </script>
   </head>
@@ -65,18 +56,21 @@
       <br>
       <fieldset>
         <legend>Gift</legend>
-        <input type="checkbox" id="gift-is-teddy" name="gift" value="T">
-        <label for="gift-is-teddy">T</label>
-        <input type="checkbox" id="gift-is-chocolate" name="gift" value="K">
-        <label for="gift-is-chocolate">K</label>
+        <input type="checkbox" id="gift-is-plush" name="gift" value="plush">
+        <label for="gift-is-plush">Plush</label>
+        <input type="checkbox" id="gift-is-fragrant" name="gift" value="fragrant">
+        <label for="gift-is-fragrant">Fragrant</label>
+        <input type="checkbox" id="gift-is-spooky" name="gift" value="spooky">
+        <label for="gift-is-spooky">Spooky</label>
       </fieldset>
       <p aria-live="polite">
         <span id="count">5</span> rows
       </p>
     </form>
 
-    <!-- <filter-able form="filters" row="tbody td"> -->
-      <table id="gifts">
+    <!-- <filter-able form="filters" rows="tbody tr" style="--filter-able-hilite: LemonChiffon;"> -->
+    <filter-able>
+      <table>
         <caption>Gifts</caption>
         <thead>
           <tr>
@@ -86,11 +80,6 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>&gt;&lt;img src="hack"&gt;</td>
-            <td>Plush Teddybear</td>
-            <td>Sent</td>
-          </tr>
           <tr>
             <td>Orlando Cantu</td>
             <td>Plush Kitten</td>
@@ -108,12 +97,17 @@
           </tr>
           <tr>
             <td>Isaias Ruiz</td>
-            <td>Spooky 👻🤖🎈</td>
+            <td>Spooky Fragrant Ice</td>
             <td>Recieved</td>
+          </tr>
+          <tr>
+            <td>&gt;&lt;img src="hack"&gt;</td>
+            <td>Can't Hack This</td>
+            <td>💌 Sent</td>
           </tr>
         </tbody>
       </table>
-    <!-- </filter-able> -->
+    </filter-able>
 
     <p></p>
     <p></p>
