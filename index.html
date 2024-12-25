@@ -8,38 +8,36 @@
       import { filterer } from '/filter.js'
       document.addEventListener("DOMContentLoaded", () => {
 
-        //Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
+        // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
+
+        // You can search by text from any column
         Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
           el.setAttribute('data-search', el.textContent)
         })
+        // Last column is state
         Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
           el.setAttribute('data-state', el.textContent)
         })
+        // This column is for gift type and has checkboxes for filters
         Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute('data-isteddy', el.textContent)
+          el.setAttribute('data-gift', el.textContent)
         })
 
-        let textHitCount = Infinity
-        let radioHitCount = Infinity
-        const renderHitCount = () => count.innerHTML = Math.min(textHitCount, radioHitCount)
+        // For simple pages with just one form for the search and a table or something. Listens to all inputs and filters selected elements based on those.
+        // filterer({selector: 'tbody tr'})
+
+        // If you have more than one form, one of which is your filterer form, you can select the form via its name or id.
+        // filterer({form: 'filter', selector: 'tbody tr'})
+
+        // If you want to do something with the found matches after a search, you can use a callback. This would log selected rows and the search terms that matched.
+        // filterer({selector: 'tbody tr', callback: console.log})
 
         filterer({
-          name: 'search',
-          //names: 'search state',
+          form: 'filter',
+          table: '#gifts',
           row: 'tbody tr',
-          callback (matches) {textHitCount = matches.length; renderHitCount()},
+          callback (matches) {count.innerHTML = matches.length},
         })
-
-        filterer({
-          name: 'state',
-          row: 'tbody tr',
-          callback (matches) {radioHitCount = matches.length; renderHitCount()},
-        })
-
-        // filterer({
-        //   name: 'isteddy',
-        //   row: 'tbody tr',
-        // })
 
       });
     </script>
@@ -48,65 +46,79 @@
     <h1>Filter</h1>
     <p>Matching rows will be shown. Matching cells will be highlighted.</p>
 
-    <p>
-      <label for="search">Filter by text</label>
-      <input id="search" name="search" type="search">
-    </p>
-    <fieldset>
-      <legend>Filter by type</legend>
-      <input type="radio" id="state-any" name="state" checked value>
-      <label for="state-any">Any</label>
-      <input type="radio" id="state-sent" name="state" value="sent">
-      <label for="state-sent">Sent</label>
-      <input type="radio" id="state-paid" name="state" value="recieved">
-      <label for="state-paid">Recieved</label>
-      <input type="radio" id="state-late" name="state" value="late">
-      <label for="state-late">Late</label>
-    </fieldset>
-    <p>
-      <input type="checkbox" id="isteddy" name="isteddy" value="teddybear">
-      <label for="isteddy">Only teddybears</label>
-    </p>
-    <p aria-live="polite">
-      <span id="count">5</span> rows
-    </p>
+    <form name="filters">
+      <p>
+        <label for="search">Filter by text</label>
+        <input id="search" name="search" type="search">
+      </p>
+      <fieldset>
+        <legend>Status</legend>
+        <input type="radio" id="state-any" name="state" checked value>
+        <label for="state-any">Any</label>
+        <input type="radio" id="state-sent" name="state" value="sent">
+        <label for="state-sent">Sent</label>
+        <input type="radio" id="state-paid" name="state" value="recieved">
+        <label for="state-paid">Recieved</label>
+        <input type="radio" id="state-late" name="state" value="late">
+        <label for="state-late">Late</label>
+      </fieldset>
+      <br>
+      <fieldset>
+        <legend>Gift</legend>
+        <input type="checkbox" id="gift-is-teddy" name="gift" value="T">
+        <label for="gift-is-teddy">T</label>
+        <input type="checkbox" id="gift-is-chocolate" name="gift" value="K">
+        <label for="gift-is-chocolate">K</label>
+      </fieldset>
+      <p aria-live="polite">
+        <span id="count">5</span> rows
+      </p>
+    </form>
 
-    <table>
-      <caption>Gifts</caption>
-      <thead>
-        <tr>
-          <th>Recipient</th>
-          <th>Gift</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>&gt;&lt;img src="hack"&gt;</td>
-          <td>Teddybear</td>
-          <td>Sent</td>
-        </tr>
-        <tr>
-          <td>Orlando Cantu</td>
-          <td>Plush kitten</td>
-          <td>Sent</td>
-        </tr>
-        <tr>
-          <td>Brian Hale</td>
-          <td>Flowers</td>
-          <td>Recieved</td>
-        </tr>
-        <tr>
-          <td>Foster Snyder</td>
-          <td>Chocolate</td>
-          <td>Late</td>
-        </tr>
-        <tr>
-          <td>Isaias Ruiz</td>
-          <td>👻🤖🎈</td>
-          <td>Recieved</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- <filter-able form="filters" row="tbody td"> -->
+      <table id="gifts">
+        <caption>Gifts</caption>
+        <thead>
+          <tr>
+            <th>Recipient</th>
+            <th>Gift</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>&gt;&lt;img src="hack"&gt;</td>
+            <td>Plush Teddybear</td>
+            <td>Sent</td>
+          </tr>
+          <tr>
+            <td>Orlando Cantu</td>
+            <td>Plush Kitten</td>
+            <td>Sent</td>
+          </tr>
+          <tr>
+            <td>Brian Hale</td>
+            <td>Fragrant Flowers</td>
+            <td>Recieved</td>
+          </tr>
+          <tr>
+            <td>Foster Snyder</td>
+            <td>Fragrant Chocolate</td>
+            <td>Late</td>
+          </tr>
+          <tr>
+            <td>Isaias Ruiz</td>
+            <td>Spooky 👻🤖🎈</td>
+            <td>Recieved</td>
+          </tr>
+        </tbody>
+      </table>
+    <!-- </filter-able> -->
+
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
   </body>
 </html>
