@@ -35,14 +35,21 @@ export class Filter extends HTMLElement {
 
   onsearch(e) {
     const rows = Array.from(this.querySelectorAll(this.#rows))
-    const filters = Array.from(new FormData(e.target.form))
-    const selector = filters.map(entry => this.has(entry)).join('')
-    const matches = this.querySelectorAll(`${this.#rows}${selector}`)
-    if (!this.dispatch(matches)) return
-    const found = Array.from(matches)
+    let data = Array.from(new FormData(e.target.form))
+    data = data.filter(([_, value]) => value)
+
+    const has = data.map(entry => this.has(entry)).join('')
+    const is = data.map(entry => this.is(entry)).join(',')
+
+    let found = this.querySelectorAll(`${this.#rows}${has}`)
+    if (!this.dispatch(found)) return
+
+    found = Array.from(found)
     for (const row of rows) {
       row.hidden = !found.includes(row)
     }
+
+    this.hilite(is)
   }
 
   dispatch(found) {
@@ -58,10 +65,28 @@ export class Filter extends HTMLElement {
   }
 
   has([name, value]) {
-    if (!value) return
     const attr = this.attribute(name)
     const words = value.trim().split(' ').map(CSS.escape)
     return words.map(word => `:has([${attr}*="${word}" i])`).join('')
+  }
+
+    //has() & is() are almost the same, room to simplify.
+  is([name, value]) {
+    const attr = this.attribute(name)
+    const words = value.trim().split(' ').map(CSS.escape)
+    return words.map(word => `[${attr}*="${word}" i]`).join(',')
+  }
+
+  #style
+  hilite(is) {
+    this.#style = this.#style || this.appendChild(document.createElement('style'))
+    if (!is) {this.#style.innerHTML = ''}
+    //TODO: how to scope these styles to only this instance of this element?
+    //TODO: Should probably think through what kind of specificity this selector should have, or use something else than <style> for highlighting matches.
+    const selector = `${this.localName} ${this.#rows} :is(${is})`
+    const text = `var(--${this.localName}-marktext, MarkText)`
+    const mark = `var(--${this.localName}-mark, Mark)`
+    this.#style.innerHTML = `${selector} {color: ${text}; background: ${mark};`
   }
 }
 
@@ -73,7 +98,3 @@ function debounce (fn, delay) {
     id = setTimeout(() => fn(...args), delay)
   }
 }
-
-//Hilite matched words?
-// const hilites = words.map(word => `${this.localName} ${row} [${attribute}*="${word}" i]`)
-// style.innerHTML = hilites.map(hilite => hilite + '{background: var(--${this.localName}-hilite)}')
