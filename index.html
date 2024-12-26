@@ -28,7 +28,7 @@
         // Events and data-attributes are named whatever you choose as your tag name for this custom element.
         const count = document.querySelector('#count')
         document.addEventListener('filter-able:search', event => {
-          count.textContent = event.detail.found.size
+          count.textContent = event.detail.found.length
         })
       });
     </script>
@@ -93,17 +93,17 @@
           <tr>
             <td>Foster Snyder</td>
             <td>Fragrant Chocolate</td>
-            <td>Late</td>
+            <td>Recieved</td>
           </tr>
           <tr>
             <td>Isaias Ruiz</td>
-            <td>Spooky Fragrant Ice</td>
-            <td>Recieved</td>
+            <td>Spooky Fragrant Ice Cream</td>
+            <td>Late</td>
           </tr>
           <tr>
             <td>&gt;&lt;img src="hack"&gt;</td>
             <td>Can't Hack This</td>
-            <td>💌 Sent</td>
+            <td>💌Sent💌</td>
           </tr>
         </tbody>
       </table>

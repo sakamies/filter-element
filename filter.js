@@ -39,38 +39,39 @@ export class FilterAble extends HTMLElement {
   onsearch(e) {
     const rows = new Set(this.querySelectorAll(this.#rows))
     const data = new FormData(e.target.form)
-    const filters = {}
+    const filters = data.entries()
     let found = new Set(rows)
 
-    // Combine multiple inputs with the same name attribute under one filter as a space delimited string.
-    for (const [name, value] of data.entries()) {
-      if (filters[name]) {
-        filters[name] += ' ' + value
-      } else {
-        filters[name] = value
-      }
-    }
-
-    // Query elements based on filters and have the found set contain only all elements that match all filters.
-    for (const [name, value] of Object.entries(filters)) {
+    //TODO: construct a selector with the query function instead of calling query selector inside it, so we can query all elements in one go and avoid the intersection of sets and also then we can return a proper NodeList from the dispatched event.
+    for (const [name, value] of filters) {
       if (value) {
         const queried = new Set(this.queryBy(name, value))
         found = found.intersection(queried)
       }
     }
 
+    //Dispatch event, but stop execution if event was canceled.
+    if (!this.dispatch([...found])) return
+
     for (const row of rows) {
       row.hidden = !found.has(row)
     }
+  }
 
+  dispatch(found) {
     const event = new CustomEvent(
       this.localName + ':search',
-      {bubbles: true, detail: {found}}
+      {
+        cancelable: true,
+        bubbles: true,
+        detail: {found},
+      }
     )
-    this.dispatchEvent(event)
+    return this.dispatchEvent(event)
   }
 
   queryBy(name, value) {
+    if (!value) return
     const attribute = 'data-' + this.localName + '-' + name
     const words = value.trim().split(' ').map(CSS.escape)
     const has = words.map(word => `:has([${attribute}*="${word}" i])`).join('')
