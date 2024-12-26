@@ -5,31 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="module">
-      import { FilterAble } from '/filter.js'
-      customElements.define('filter-able', FilterAble);
+      import { Filter } from '/filter.js'
+      customElements.define('filter-', Filter);
 
       document.addEventListener("DOMContentLoaded", () => {
 
         // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
         // Search by text from any column
         Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
-          el.setAttribute('data-filter-able-search', el.textContent)
+          el.setAttribute('data-filter--search', el.textContent)
         })
         // Gift type and checkboxes for filters
         Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute('data-filter-able-gift', el.textContent)
+          el.setAttribute('data-filter--gift', el.textContent)
         })
         // Last column is state
         Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
-          el.setAttribute('data-filter-able-state', el.textContent)
+          el.setAttribute('data-filter--state', el.textContent)
         })
 
         // Update found count and announce it with aria-live.
         // Events and data-attributes are named whatever you choose as your tag name for this custom element.
         const count = document.querySelector('#count')
-        document.addEventListener('filter-able:search', event => {
+        document.addEventListener('filter-', event => {
           count.textContent = event.detail.found.length
         })
+
+        //Make sure the thing still works after being moved around in the dom
+        document.body.appendChild(document.querySelector('filter-'))
       });
     </script>
   </head>
@@ -68,8 +71,8 @@
       </p>
     </form>
 
-    <!-- <filter-able form="filters" rows="tbody tr" style="--filter-able-hilite: LemonChiffon;"> -->
-    <filter-able>
+    <!-- <filter- form="filters" rows="tbody tr" style="--filter--hilite: LemonChiffon;"> -->
+    <filter->
       <table>
         <caption>Gifts</caption>
         <thead>
@@ -107,12 +110,6 @@
           </tr>
         </tbody>
       </table>
-    </filter-able>
-
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
+    </filter->
   </body>
 </html>

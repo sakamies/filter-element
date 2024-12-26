@@ -5,12 +5,16 @@
  * @param {function} callback - Optional callback that will be run after every search invocation. Called with found shown items and matched terms
  */
 
-export class FilterAble extends HTMLElement {
+export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'row']
+
+  attribute = (name) => 'data-' + this.localName + '-' + name
 
   #form
   get form() {
-    return document.forms[this.#form] || this.querySelector('form') || document.forms[0]
+    return document.forms[this.#form]
+    || this.querySelector('form')
+    || document.forms[0]
   }
 
   #rows = 'tbody tr'
@@ -20,6 +24,8 @@ export class FilterAble extends HTMLElement {
 
   constructor() {
     super()
+    const lazy = debounce(this.onsearch.bind(this), 100)
+    this.form.addEventListener('input', lazy)
   }
 
   attributeChangedCallback(name, _, value) {
@@ -27,40 +33,21 @@ export class FilterAble extends HTMLElement {
     if (name === 'row') {this.#rows = value}
   }
 
-  connectedCallback() {
-    const lazy = debounce(this.onsearch.bind(this), 100)
-    this.form.addEventListener('input', lazy)
-  }
-
-  disconnectedCallback() {
-    //TODO: what kinda cleanup needs to happen on disconnect? No idea.
-  }
-
   onsearch(e) {
-    const rows = new Set(this.querySelectorAll(this.#rows))
-    const data = new FormData(e.target.form)
-    const filters = data.entries()
-    let found = new Set(rows)
-
-    //TODO: construct a selector with the query function instead of calling query selector inside it, so we can query all elements in one go and avoid the intersection of sets and also then we can return a proper NodeList from the dispatched event.
-    for (const [name, value] of filters) {
-      if (value) {
-        const queried = new Set(this.queryBy(name, value))
-        found = found.intersection(queried)
-      }
-    }
-
-    //Dispatch event, but stop execution if event was canceled.
-    if (!this.dispatch([...found])) return
-
+    const rows = Array.from(this.querySelectorAll(this.#rows))
+    const filters = Array.from(new FormData(e.target.form))
+    const selector = filters.map(entry => this.has(entry)).join('')
+    const matches = this.querySelectorAll(`${this.#rows}${selector}`)
+    if (!this.dispatch(matches)) return
+    const found = Array.from(matches)
     for (const row of rows) {
-      row.hidden = !found.has(row)
+      row.hidden = !found.includes(row)
     }
   }
 
   dispatch(found) {
     const event = new CustomEvent(
-      this.localName + ':search',
+      this.localName,
       {
         cancelable: true,
         bubbles: true,
@@ -70,18 +57,15 @@ export class FilterAble extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  queryBy(name, value) {
+  has([name, value]) {
     if (!value) return
-    const attribute = 'data-' + this.localName + '-' + name
+    const attr = this.attribute(name)
     const words = value.trim().split(' ').map(CSS.escape)
-    const has = words.map(word => `:has([${attribute}*="${word}" i])`).join('')
-    const match = `${this.#rows}${has}`
-    const matches = this.querySelectorAll(match)
-    return matches
+    return words.map(word => `:has([${attr}*="${word}" i])`).join('')
   }
 }
 
-//This is like five lines so I don't want this as an external dependency.
+//This is like a few lines so I don't want this as an external dependency.
 function debounce (fn, delay) {
   let id;
   return function (...args) {
@@ -89,11 +73,6 @@ function debounce (fn, delay) {
     id = setTimeout(() => fn(...args), delay)
   }
 }
-
-//Query hidden rows?
-// const nothas = `:not(${has})`
-// const hide = `${this.row}${nothas}`
-// const hidden = document.querySelectorAll(hide)
 
 //Hilite matched words?
 // const hilites = words.map(word => `${this.localName} ${row} [${attribute}*="${word}" i]`)
