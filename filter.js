@@ -15,6 +15,7 @@ export class Filter extends HTMLElement {
     return document.forms[this.#form]
     || this.querySelector('form')
     || document.forms[0]
+    || console.warn('No form found for ' + this.localName)
   }
 
   #rows = 'tbody tr'
@@ -25,7 +26,7 @@ export class Filter extends HTMLElement {
   constructor() {
     super()
     const lazy = debounce(this.onsearch.bind(this), 100)
-    this.form.addEventListener('input', lazy)
+    this.form && this.form.addEventListener('input', lazy)
   }
 
   attributeChangedCallback(name, _, value) {
