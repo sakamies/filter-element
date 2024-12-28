@@ -6,33 +6,34 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script type="module">
       import { Filter } from '/filter.js'
-      customElements.define('filter-', Filter);
+      const tagName = 'filter-'
+      customElements.define(tagName, Filter);
 
       document.addEventListener("DOMContentLoaded", () => {
 
         // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
         // Search by text from any column
         Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
-          el.setAttribute('data-filter--search', el.textContent)
+          el.setAttribute('data-'+tagName+'-search', el.textContent)
         })
         // Gift type and checkboxes for filters
         Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute('data-filter--gift', el.textContent)
+          el.setAttribute('data-'+tagName+'-gift', el.textContent)
         })
         // Last column is state
         Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
-          el.setAttribute('data-filter--state', el.textContent)
+          el.setAttribute('data-'+tagName+'-state', el.textContent)
         })
 
         // Update found count and announce it with aria-live.
-        // Events and data-attributes are named whatever you choose as your tag name for this custom element.
+        // Events and data-attributes are named whatever you choose as your tagName for this custom element.
         const count = document.querySelector('#count')
-        document.addEventListener('filter-', event => {
+        document.addEventListener(tagName, event => {
           count.textContent = event.detail.found.length
         })
 
         //Make sure the thing still works after being moved around in the dom
-        document.body.appendChild(document.querySelector('filter-'))
+        document.body.appendChild(document.querySelector(tagName))
       });
     </script>
   </head>
@@ -43,10 +44,12 @@
     <form name="filters">
       <p>
         <label for="search">Filter by text</label>
+        <!-- Row must include all words of text input value (in any order) -->
         <input id="search" name="search" type="search">
       </p>
       <fieldset>
         <legend>Status</legend>
+        <!-- Radios work the same as text inputs. Row must include the value of the checked radio. If value has spaces, must include all words in any order. -->
         <input type="radio" id="state-any" name="state" checked value>
         <label for="state-any">Any</label>
         <input type="radio" id="state-sent" name="state" value="sent">
@@ -59,6 +62,7 @@
       <br>
       <fieldset>
         <legend>Gift</legend>
+        <!-- Same as radios, row must all words of checked radio in any order. -->
         <input type="checkbox" id="gift-is-plush" name="gift" value="plush">
         <label for="gift-is-plush">Plush</label>
         <input type="checkbox" id="gift-is-fragrant" name="gift" value="fragrant">
@@ -66,6 +70,10 @@
         <input type="checkbox" id="gift-is-spooky" name="gift" value="spooky">
         <label for="gift-is-spooky">Spooky</label>
       </fieldset>
+      <p>
+        <input type="checkbox" id="gift-not-spooky" name="gift:not" value="spooky">
+        <label for="gift-not-spooky">Hide spooky things</label>
+      </p>
       <p aria-live="polite">
         <span id="count">5</span> rows
       </p>

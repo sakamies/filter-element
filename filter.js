@@ -9,6 +9,9 @@ export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'row']
 
   attribute = (name) => 'data-' + this.localName + '-' + name
+  has = (selector) => `:has(${selector})`
+  is = (selector) => `:is(${selector})`
+  not = (selector) => `:not(${selector})`
 
   #form
   get form() {
@@ -25,7 +28,7 @@ export class Filter extends HTMLElement {
 
   constructor() {
     super()
-    const lazy = debounce(this.onsearch.bind(this), 100)
+    const lazy = debounce(this.filter.bind(this), 100)
     this.form && this.form.addEventListener('input', lazy)
   }
 
@@ -34,23 +37,21 @@ export class Filter extends HTMLElement {
     if (name === 'row') {this.#rows = value}
   }
 
-  onsearch(e) {
+  filter() {
     const rows = Array.from(this.querySelectorAll(this.#rows))
-    let data = Array.from(new FormData(e.target.form))
+    let data = Array.from(new FormData(this.form))
     data = data.filter(([_, value]) => value)
 
-    const has = data.map(entry => this.has(entry)).join('')
-    const is = data.map(entry => this.is(entry)).join(',')
+    let select = data.flatMap(([name, value]) => this.selectBy(name, value))
+    select = select.join('')
 
-    let found = this.querySelectorAll(`${this.#rows}${has}`)
+    let found = this.querySelectorAll(`${this.#rows}${select}`)
     if (!this.dispatch(found)) return
 
     found = Array.from(found)
     for (const row of rows) {
       row.hidden = !found.includes(row)
     }
-
-    this.hilite(is)
   }
 
   dispatch(found) {
@@ -65,26 +66,34 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  has([name, value]) {
-    const attr = this.attribute(name)
-    const words = value.trim().split(' ').map(CSS.escape)
-    return words.map(word => `:has([${attr}*="${word}" i])`).join('')
-  }
+  selectBy(name, value, not = '') {
+    [name, not] = name.split(/(?=:)/)
 
-    //has() & is() are almost the same, room to simplify.
-  is([name, value]) {
     const attr = this.attribute(name)
     const words = value.trim().split(' ').map(CSS.escape)
-    return words.map(word => `[${attr}*="${word}" i]`).join(',')
+    const attrs = words.map(word => `[${attr}*="${word}" i]`)
+
+    const has = attrs.map(a => this.has(a)).join('')
+    return not === ':not' && this.not(has) || has
   }
 
   #style
-  hilite(is) {
+  hilite(name, value, hilite = '') {
     this.#style = this.#style || this.appendChild(document.createElement('style'))
     if (!is) {this.#style.innerHTML = ''}
+
+    [name, hilite] = name.split(/(?=:)/)
+    if (hilite !== ':hilite') return
+
+    const attr = this.attribute(name)
+    const words = value.trim().split(' ').map(CSS.escape)
+    const attrs = words.map(word => `[${attr}*="${word}" i]`)
+
+    const is = this.is(attrs.join(''))
+
     //TODO: how to scope these styles to only this instance of this element?
     //TODO: Should probably think through what kind of specificity this selector should have, or use something else than <style> for highlighting matches.
-    const selector = `${this.localName} ${this.#rows} :is(${is})`
+    const selector = `${this.localName} ${this.#rows} ${is}`
     const text = `var(--${this.localName}-marktext, MarkText)`
     const mark = `var(--${this.localName}-mark, Mark)`
     this.#style.innerHTML = `${selector} {color: ${text}; background: ${mark};`
