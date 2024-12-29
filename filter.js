@@ -24,7 +24,7 @@ export class Filter extends HTMLElement {
     return document.forms[sel.form]
     || this.querySelector('form')
     || document.forms[0]
-    || console.warn('No form found for ' + sel.tag)
+    || console.warn('No form found for', this)
   }
 
   get rows() {
@@ -44,6 +44,15 @@ export class Filter extends HTMLElement {
     this.filter()
   }
 
+  dispatch(found) {
+    const event = new CustomEvent(sel.tag, {
+      cancelable: true,
+      bubbles: true,
+      detail: {found},
+    })
+    return this.dispatchEvent(event)
+  }
+
   filter() {
     const rows = this.querySelectorAll(sel.rows)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
@@ -56,15 +65,6 @@ export class Filter extends HTMLElement {
     rows.forEach(row => row.hidden = !shown.includes(row))
 
     this.hilite(data.flatMap(this.hiliteSelectors, this).join(','))
-  }
-
-  dispatch(found) {
-    const event = new CustomEvent(sel.tag, {
-      cancelable: true,
-      bubbles: true,
-      detail: {found},
-    })
-    return this.dispatchEvent(event)
   }
 
   attributeSelectors(name, value) {
@@ -86,14 +86,16 @@ export class Filter extends HTMLElement {
   }
 
   hilite(attrsToHilite) {
+    // TODO: this is really simple, but using Range() and ::highlight() would be more accurate. Not sure if it's worth the complexity.
     const selector = `${sel.rows} ${sel.is(attrsToHilite)}`
     const text = `var(--${sel.tag}-marktext, MarkText)`
     const mark = `var(--${sel.tag}-mark, Mark)`
-    style.innerHTML = `@scope {${selector} {color: ${text}; background: ${mark};}`
+    style.innerHTML = `@scope {${selector} {color: ${text}; background-color: ${mark};}`
   }
 }
 
-//This is like a few lines so I don't want this as an external dependency.
+// This is like a few lines so I don't want this as an external dependency.
+// Not sure debounce necessary, but I would like to be as kind as I can to peoples devices. Like if you really pound your keyboard and the table is huge, maybe then this is needed.
 function debounce (fn, delay) {
   let id;
   return function (...args) {

@@ -45,6 +45,7 @@
       <p>
         <label for="search">Filter by text</label>
         <!-- Row must include all words of text input value (in any order) -->
+        <!-- Use :hi suffix on input name to have any matches be highlighted. -->
         <input id="search" name="search:hi" type="search">
       </p>
       <fieldset>
@@ -62,27 +63,33 @@
       <br>
       <fieldset>
         <legend>Gift</legend>
-        <!-- Same as radios, row must all words of checked radio in any order. -->
+        <!-- Same as radios, row must have all words of checked radio in any order. -->
         <input type="checkbox" id="gift-is-plush" name="gift" value="plush">
         <label for="gift-is-plush">Plush</label>
         <input type="checkbox" id="gift-is-fragrant" name="gift" value="fragrant">
         <label for="gift-is-fragrant">Fragrant</label>
         <input type="checkbox" id="gift-is-spooky" name="gift" value="spooky">
         <label for="gift-is-spooky">Spooky</label>
+
+        <!-- This checkbox is the same as selecting fragrant & spooky checkboxes on their own. -->
+        <input type="checkbox" id="gift-is-spooky-and-fragrant" name="gift" value="spooky fragrant">
+        <label for="gift-is-spooky-and-fragrant">Spooky & Fragrant</label>
       </fieldset>
       <p>
+        <!-- Use :not suffix on input name to have this value be excluded from the results instead of being included. -->
         <input type="checkbox" id="gift-not-spooky" name="gift:not" value="spooky">
         <label for="gift-not-spooky">Hide spooky things</label>
       </p>
-      <p aria-live="polite">
-        <span id="count">5</span> rows
-      </p>
     </form>
 
+    <!-- Highlight color can be changed with --{tagNname}-hilite css variable. Defaults to system colors. -->
     <!-- <filter- form="filters" rows="tbody tr" style="--filter--hilite: LemonChiffon;"> -->
     <filter->
       <table>
-        <caption>Gifts</caption>
+        <caption aria-live="polite">
+          <span id="count">5</span>
+          Gifts
+        </caption>
         <thead>
           <tr>
             <th>Recipient</th>

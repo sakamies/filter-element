@@ -1,5 +1,7 @@
 /* None of this css matters for the functionality. */
-
+html {
+  color-scheme: light dark;
+}
 body {
   font-family: monospace;
   line-height: 1.5;
