@@ -40,8 +40,8 @@ export class Filter extends HTMLElement {
   }
 
   attributeChangedCallback(name, _, value) {
-    if (name === 'form') {sel.form = value}
-    if (name === 'rows') {sel.rows = value}
+    sel[name] = value
+    this.filter()
   }
 
   filter() {
