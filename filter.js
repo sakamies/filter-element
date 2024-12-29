@@ -47,13 +47,15 @@ export class Filter extends HTMLElement {
   filter() {
     const rows = this.querySelectorAll(sel.rows)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
-    const selector = data.flatMap(this.selectBy).join('')
+    const rowHas = data.map(this.hasAttributeSelectors, this).join('')
 
-    const found = this.querySelectorAll(sel.rows+selector)
+    const found = this.querySelectorAll(sel.rows+rowHas)
     if (!this.dispatch(found)) return
 
     const shown = Array.from(found)
     rows.forEach(row => row.hidden = !shown.includes(row))
+
+    this.hilite(data.flatMap(this.hiliteSelectors, this).join(','))
   }
 
   dispatch(found) {
@@ -65,32 +67,29 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  selectBy([name, value], flag) {
-    [name, flag] = name.split(':')
+  attributeSelectors(name, value) {
     name = CSS.escape(name)
-
     const words = value.trim().split(' ').map(CSS.escape)
-    const attrs = words.map(word => sel.attr(name, word))
-    const has = attrs.map(sel.has).join('')
-
-    return flag === 'not' && sel.not(has) || has
+    let attrs = words.map(word => sel.attr(name, word))
+    return attrs
   }
 
-  hilite([name, value], flag) {
+  hasAttributeSelectors([name, value], flag) {
     [name, flag] = name.split(':')
-    if (flag !== 'hi') return
+    const selector = this.attributeSelectors(name, value).map(sel.has).join('')
+    return flag === 'not' && sel.not(selector) || selector
+  }
 
-    name = CSS.escape(name)
-    const words = value.trim().split(' ').map(CSS.escape)
-    const attrs = words.map(word => sel.attr(name, word))
-    const is = sel.is(attrs.join(''))
+  hiliteSelectors([name, value], flag) {
+    [name, flag] = name.split(':')
+    return flag === 'hi' && this.attributeSelectors(name, value) || []
+  }
 
-    //TODO: how to scope these styles to only this instance of this element?
-    //TODO: Should probably think through what kind of specificity this selector should have, or use something else than <style> for highlighting matches.
-    const selector = `${sel.tag} ${sel.rows} ${is}`
+  hilite(attrsToHilite) {
+    const selector = `${sel.rows} ${sel.is(attrsToHilite)}`
     const text = `var(--${sel.tag}-marktext, MarkText)`
     const mark = `var(--${sel.tag}-mark, Mark)`
-    style.innerHTML = `${selector} {color: ${text}; background: ${mark};`
+    style.innerHTML = `@scope {${selector} {color: ${text}; background: ${mark};}`
   }
 }
 
