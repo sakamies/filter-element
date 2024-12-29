@@ -1,9 +1,8 @@
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
- * @param {node} form - Optional form name to scope event listeners to.
- * @param {string} selector - CSS Selector that targets the items that you want to show or hide based on the . Doesn't have to be a table row, any element will do. Example: `#mytable tbody tr`
- * @param {function} callback - Optional callback that will be run after every search invocation. Called with found shown items and matched terms
+ * @param {string} form - Optional form name or id. If blank, the first form inside the element instance, or the first form in the document is used.
+ * @param {string} rows - CSS Selector that targets the items that you want to show or hide based on the form. Doesn't have to be a table row, any element will do. Example: `#mytable .card`
  */
 
 let style

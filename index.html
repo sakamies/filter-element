@@ -82,8 +82,14 @@
       </p>
     </form>
 
-    <!-- Highlight color can be changed with --{tagNname}-hilite css variable. Defaults to system colors. -->
-    <!-- <filter- form="filters" rows="tbody tr" style="--filter--hilite: LemonChiffon;"> -->
+    <!--
+    Use the form attribute to select a form to use (by name or id).
+    Use the rows attribute to set a selector for the elements you want to filter. Can be anything, doesn't have to be table rows.
+    Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. (Defaults to system colors that are MarkText & Mark.)
+
+    Example with default values:
+    <filter- form="filters" rows="tbody tr" style="--filter--marktext: MarkText; --filter--mark: Mark;">
+    -->
     <filter->
       <table>
         <caption aria-live="polite">
