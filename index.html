@@ -41,7 +41,7 @@
     <h1>Filter</h1>
     <p>Matching rows will be shown. Matching cells will be highlighted.</p>
 
-    <form name="filters">
+    <form id="filters">
       <p>
         <label for="search">Filter by text</label>
         <!-- Row must include all words of text input value (in any order) -->
@@ -90,7 +90,7 @@
     Example with default values:
     <filter- form="filters" rows="tbody tr" style="--filter--marktext: MarkText; --filter--mark: Mark;">
     -->
-    <filter->
+    <filter- live>
       <table>
         <caption aria-live="polite">
           <span id="count">5</span>

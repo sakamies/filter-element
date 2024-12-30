@@ -17,7 +17,35 @@ const sel = {
 }
 
 export class Filter extends HTMLElement {
-  static observedAttributes = ['form', 'rows']
+  static observedAttributes = ['form', 'rows', 'live']
+
+  #live = false
+  get live() {return this.#live}
+  set live(value) {
+    if (this.#live === false && value == true) {
+      console.log('set live() true')
+      this.#live = true
+      this.setAttribute('live', '')
+      if (!this.#observing) this.#observe()
+    }
+    if (this.#live === true && value == false) {
+      console.log('set live() false ')
+      this.removeAttribute('live')
+      if (this.#observing) this.#unobserve()
+    }
+  }
+
+  #observing
+  #observer
+  #observe() {
+    console.log('observing')
+    this.#observing = true
+    this.#observer.observe(this, {
+      childList: true,
+      subtree: true,
+    })
+  }
+  #unobserve() {this.#observer.disconnect()}
 
   get form() {
     return document.forms[sel.form]
@@ -34,18 +62,34 @@ export class Filter extends HTMLElement {
     super()
     sel.tag = this.localName
     style = style || this.appendChild(document.createElement('style'))
-    const lazy = debounce(this.filter.bind(this), 100)
-    this.form && this.form.addEventListener('input', lazy)
-
-    // (new MutationObserver(lazy)).observe(this, {
-    //   childList: true,
-    //   subtree: true,
-    //   attributes: true,
-    // })
+    this.form && this.form.addEventListener('input', this.filter)
+    this.#observer = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        console.log({mutation})
+        const rowsAddedOrRemoved = [...mutation.addedNodes, ...mutation.removedNodes].some(el => {
+          return el.matches && el.matches(sel.is(sel.rows))
+        })
+          if (rowsAddedOrRemoved) {
+            console.log('rowsAddedOrRemoved')
+            this.filter()
+          }
+        }
+      })
+    })
   }
 
   attributeChangedCallback(name, _, value) {
-    sel[name] = value
+    if (name === 'live') {
+      if (this.#live === false && value !== null) {
+        console.log('attr live, set this.live = true')
+        this.live = true
+      }
+      if (this.#live === true && value === null) {
+        console.log('attr live, set this.live = false')
+        this.live = false
+      }
+    }
+    else {sel[name] = value}
     this.filter()
   }
 
@@ -58,7 +102,9 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  filter() {
+  filter = debounce(this.#filter.bind(this), 100)
+  #filter() {
+    console.log('filtered')
     const rows = this.querySelectorAll(sel.rows)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
     const rowHas = data.map(this.hasAttributeSelectors, this).join('')
