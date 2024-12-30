@@ -36,6 +36,12 @@ export class Filter extends HTMLElement {
     style = style || this.appendChild(document.createElement('style'))
     const lazy = debounce(this.filter.bind(this), 100)
     this.form && this.form.addEventListener('input', lazy)
+
+    // (new MutationObserver(lazy)).observe(this, {
+    //   childList: true,
+    //   subtree: true,
+    //   attributes: true,
+    // })
   }
 
   attributeChangedCallback(name, _, value) {
