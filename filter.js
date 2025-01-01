@@ -7,7 +7,6 @@
 
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target']
-  //TODO: attribute like "exact" or something to have only exact matches?
 
   styleElement
   selectors = {
@@ -19,7 +18,6 @@ export class Filter extends HTMLElement {
 
   get form() {
     return document.forms[this.getAttribute('form')]
-    || this.querySelector('form')
     || this.closest('form')
     || document.forms[0]
     || console.warn('No form found for', this)
@@ -81,9 +79,8 @@ export class Filter extends HTMLElement {
   }
 
   hilite(attrsToHilite) {
-    // TODO: this is really simple, but using Range() and ::highlight() would be more accurate. Not sure if it's worth the complexity.
-    if (attrsToHilite && this.id) {
-      const selector = `#${this.id} ${this.rowsSelector} ${this.selectors.is(attrsToHilite)}`
+    if (attrsToHilite && this.target.id) {
+      const selector = `#${this.target.id} ${this.selectors.is(attrsToHilite)}`
       const text = `var(--${this.localName}-marktext, MarkText)`
       const mark = `var(--${this.localName}-mark, Mark)`
       this.styleElement.innerHTML = `${selector} {color: ${text}; background-color: ${mark};`
