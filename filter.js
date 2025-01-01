@@ -1,12 +1,12 @@
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
- * @param {string} form - Optional form name or id. If blank, the first form inside the element instance, or the first form in the document is used.
- * @param {string} rows - CSS Selector that targets the items that you want to show or hide based on the form. Doesn't have to be a table row, any element will do. Example: `#mytable .card`
+ * @param {string} form - Optional form name or id. If blank, closest parent form or the first form in the document is used.
+ * @param {string} target - Optional target element id. Will filter target element children. Optional, defaults to the filter element itself.
  */
 
 export class Filter extends HTMLElement {
-  static observedAttributes = ['form', 'rows']
+  static observedAttributes = ['form', 'target']
   //TODO: attribute like "exact" or something to have only exact matches?
 
   styleElement
@@ -25,8 +25,8 @@ export class Filter extends HTMLElement {
     || console.warn('No form found for', this)
   }
 
-  get rows() {
-    return this.querySelectorAll(this.rowsSelector)
+  get target() {
+    return document.getElementById(this.getAttribute('target')) || this
   }
 
   constructor() {
@@ -51,22 +51,15 @@ export class Filter extends HTMLElement {
 
   filterDebounced
   filter() {
-    const rows = this.querySelectorAll(this.rowsSelector)
+    const items = Array.from(this.target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
-    const rowHas = data.map(this.hasAttributeSelectors, this).join('')
+    const hasAttrs = data.map(this.hasAttributeSelectors, this).join('')
 
-    const found = this.querySelectorAll(this.rowsSelector+rowHas)
-    if (!this.dispatch(found)) return
-
-    const shown = Array.from(found)
-    rows.forEach(row => row.hidden = !shown.includes(row))
+    const found = Array.from(this.target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
+    if (!this.dispatch(found)) return //Event is cancelable
+    items.forEach(item => item.hidden = !found.includes(item))
 
     this.hilite(data.flatMap(this.hiliteSelectors, this).join(','))
-  }
-
-  //TODO: If this is to be a generic filter and not a table specific filter, the default should be to filter direct children instead of table rows.
-  get rowsSelector() {
-    return this.getAttribute('rows') || 'tbody tr'
   }
 
   attributeSelectors(name, value, flags) {
