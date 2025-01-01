@@ -32,12 +32,12 @@ export class Filter extends HTMLElement {
   constructor() {
     super()
     this.styleElement = this.styleElement || this.appendChild(document.createElement('style'))
-    const lazy = debounce(this.filter.bind(this), 100)
-    this.form && this.form.addEventListener('input', lazy)
+    this.#filterDebounced = debounce(this.filter.bind(this), 50)
+    this.form && this.form.addEventListener('input', this.#filterDebounced)
   }
 
   attributeChangedCallback(name, _, value) {
-    this.filter()
+    this.#filterDebounced()
   }
 
   dispatch(found) {
@@ -49,6 +49,7 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
+  #filterDebounced
   filter() {
     const rows = this.querySelectorAll(this.rowsSelector)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)

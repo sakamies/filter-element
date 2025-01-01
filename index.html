@@ -46,7 +46,7 @@
         <label for="search">Filter by text</label>
         <!-- Row must include all words of text input value (in any order) -->
         <!-- Use :hi suffix on input name to have any matches be highlighted. -->
-        <input id="search" name="search:hi" type="search">
+        <input id="search" name="search:hilite" type="search">
       </p>
       <fieldset>
         <legend>Status</legend>
@@ -84,13 +84,10 @@
 
     <!--
     Use the form attribute to select a form to use (by name or id).
-    Use the rows attribute to set a selector for the elements you want to filter. Can be anything, doesn't have to be table rows.
-    Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. (Defaults to system colors that are MarkText & Mark.)
-
-    Example with default values:
-    <filter- form="filters" rows="tbody tr" style="--filter--marktext: MarkText; --filter--mark: Mark;">
+    Use the target attribute to select the list of things you want to filter.
+    Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. Defaults to system colors that are MarkText & Mark.
     -->
-    <filter->
+    <filter- form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
       <table>
         <caption aria-live="polite">
           <span id="count">5</span>
@@ -103,7 +100,7 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="gift-rows">
           <tr>
             <td>Orlando Cantu</td>
             <td>Plush Kitten</td>
