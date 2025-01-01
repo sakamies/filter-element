@@ -69,22 +69,22 @@ export class Filter extends HTMLElement {
     return this.getAttribute('rows') || 'tbody tr'
   }
 
-  attributeSelectors(name, value) {
+  attributeSelectors(name, value, flags) {
     name = CSS.escape(name)
     const words = value.trim().split(' ').map(CSS.escape)
     let attrs = words.map(word => this.selectors.attr(name, word))
     return attrs
   }
 
-  hasAttributeSelectors([name, value], flag) {
-    [name, flag] = name.split(':')
-    const selector = this.attributeSelectors(name, value).map(this.selectors.has).join('')
-    return flag === 'not' && this.selectors.not(selector) || selector
+  hasAttributeSelectors([name, value], flags) {
+    [name, ...flags] = name.split(':')
+    const selector = this.attributeSelectors(name, value, flags).map(this.selectors.has).join('')
+    return flags.includes('not') && this.selectors.not(selector) || selector
   }
 
-  hiliteSelectors([name, value], flag) {
-    [name, flag] = name.split(':')
-    return flag === 'hi' && this.attributeSelectors(name, value) || []
+  hiliteSelectors([name, value], flags) {
+    [name, ...flags] = name.split(':')
+    return flags.includes('hilite') && this.attributeSelectors(name, value, flags) || []
   }
 
   hilite(attrsToHilite) {
