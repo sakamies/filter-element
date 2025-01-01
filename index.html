@@ -42,12 +42,22 @@
     <p>Matching rows will be shown. Matching cells will be highlighted.</p>
 
     <form name="filters">
-      <p>
-        <label for="search">Filter by text</label>
-        <!-- Row must include all words of text input value (in any order) -->
-        <!-- Use :hi suffix on input name to have any matches be highlighted. -->
+      <div class="field">
+        <label for="search">Fuzzy words search</label>
+        <!-- Default search behaviour is that a data-attribute must include these words in any order, partial matches are shown. -->
+        <!-- :hilite suffix on input name to have any matches be highlighted. -->
         <input id="search" name="search:hilite" type="search">
-      </p>
+      </div>
+      <div class="field">
+        <label for="search-includes">Text search</label>
+        <!-- :includes suffix mean that a data-attribute must include this text as is, partial matches are shown. -->
+        <input id="search-includes" name="search:includes:hilite" type="search">
+      </div>
+      <div class="field">
+        <label for="search-exact">Exact contents search</label>
+        <!-- :exact suffix means that a data-attribute must be this exact value. -->
+        <input id="search-exact" name="search:exact:hilite" type="search">
+      </div>
       <fieldset>
         <legend>Status</legend>
         <!-- Radios work the same as text inputs. Row must include the value of the checked radio. If value has spaces, must include all words in any order. -->

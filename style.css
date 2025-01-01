@@ -1,4 +1,6 @@
-/* None of this css matters for the functionality. */
+* {
+  box-sizing: border-box;
+}
 html {
   color-scheme: light dark;
 }
@@ -17,6 +19,7 @@ fieldset {
   font-size: inherit;
   padding: .5rem;
   margin: 0;
+  width: 100%;
   border: 1px solid;
 }
 table {
@@ -34,4 +37,12 @@ caption, td, th {
 }
 :is(th, td):last-child {
   text-align: right;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  place-items: center start;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
 }

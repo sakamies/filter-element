@@ -10,7 +10,8 @@ export class Filter extends HTMLElement {
 
   styleElement
   selectors = {
-    attr: (name, value) => `[data-${this.localName}-${name}*="${value}" i]`,
+    attrExact: (name, value) => `[data-${this.localName}-${name}="${value}" i]`,
+    attrIncludes: (name, value) => `[data-${this.localName}-${name}*="${value}" i]`,
     has: str => `:has(${str})`,
     is: str => `:is(${str})`,
     not: str => `:not(${str})`,
@@ -62,8 +63,15 @@ export class Filter extends HTMLElement {
 
   attributeSelectors(name, value, flags) {
     name = CSS.escape(name)
-    const words = value.trim().split(' ').map(CSS.escape)
-    let attrs = words.map(word => this.selectors.attr(name, word))
+    let attrs
+    if (flags.includes('exact')) {
+      attrs = [this.selectors.attrExact(name, CSS.escape(value))]
+    } else if (flags.includes('includes')) {
+      attrs = [this.selectors.attrIncludes(name, CSS.escape(value))]
+    } else {
+      const words = value.trim().split(' ').map(CSS.escape)
+      attrs = words.map(word => this.selectors.attrIncludes(name, word))
+    }
     return attrs
   }
 
