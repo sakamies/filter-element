@@ -62,10 +62,6 @@ export class Filter extends HTMLElement {
     rows.forEach(row => row.hidden = !shown.includes(row))
 
     this.hilite(data.flatMap(this.hiliteSelectors, this).join(','))
-
-    if (this.getAttribute('hideblank') !== null && data.length === 0) {
-      rows.forEach(row => row.hidden = true)
-    }
   }
 
   //TODO: If this is to be a generic filter and not a table specific filter, the default should be to filter direct children instead of table rows.

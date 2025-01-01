@@ -78,16 +78,16 @@
       <p>
         <!-- Use :not suffix on input name to have this value be excluded from the results instead of being included. -->
         <input type="checkbox" id="gift-not-spooky" name="gift:not" value="spooky">
-        <label for="gift-not-spooky">Hide spooky things</label>
+        <label for="gift-not-spooky">Non spooky things</label>
       </p>
     </form>
 
     <!--
-    Use the form attribute to select a form to use (by name or id).
-    Use the target attribute to select the list of things you want to filter.
+    [form] Optional form name or id. If blank, closest parent form or the first form in the document is used.
+    [target] Optional target element id. Will filter target element children. Optional, defaults to the filter element itself.
     Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. Defaults to system colors that are MarkText & Mark.
     -->
-    <filter- form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
+    <filter- exact form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
       <table>
         <caption aria-live="polite">
           <span id="count">5</span>
