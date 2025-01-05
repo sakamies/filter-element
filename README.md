@@ -1,13 +1,20 @@
-# Code golf search filter
+# Custom element for filtering a list of elements based on a form
 
-Where I try to have the browser do all the work for me.
+Example usage. And yeah nothing's missing, this example works as is without any config. More elaborate example usage and available attributes are in `index.html´ and `filter.js`.
 
-I'm using plain old (newly baseline) css to do the filtering. I mean I build a selector to find matches to a search query and apply the selector to a &lt;style&gt; element. No iteration of any elements in javascript necessary. You might want to inform users of the number of matches, so there's an optional callback to get the number of matches.
+```
+<script>
+  import { Filter } from '/filter.js'
+  customElements.define('my-filter', Filter);
+</script>
 
-This is an excersise in using native DOM scripting and CSS, so I'm making some assumptions about the use of html.
+<form>
+  <label for="search">Fuzzy words search</label>
+  <input id="search" name="search" type="search">
+</form>
 
-- Inputs need to be inside a form element.
-- Forms and inputs must have a name attribute.
-- Only string matching, numeric inputs will be compared a strings.
-
-In the example code, the search index is built with javascript. Search indexing should be rendered into the html already from the server, but this bit of javascript is to illustrate building a search index so I don't have to hand code it into this example.
+<my-filter>
+  <div>Thing 1 <span data-my-filter-search>search term</span></div>
+  <div>Thing 2 <span data-my-filter-search>other term</span></div>
+</my-filter>
+```
