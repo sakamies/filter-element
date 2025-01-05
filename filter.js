@@ -35,7 +35,7 @@ export class Filter extends HTMLElement {
     this.form && this.form.addEventListener('input', this.filterDebounced)
   }
 
-  attributeChangedCallback(name, _, value) {
+  attributeChangedCallback() {
     this.filterDebounced()
   }
 
