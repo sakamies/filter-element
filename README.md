@@ -1,4 +1,4 @@
-# Custom element for filtering a list of elements based on a form
+# A custom element for filtering a list of elements based on a form
 
 Example usage. And yeah nothing's missing, this example works as is without any config. More elaborate example usage and available attributes are in `index.html´ and `filter.js`.
 
