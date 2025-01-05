@@ -1,3 +1,9 @@
+/*TODO:
+- Automatically build index based on textContent of immediate children if index attributes were not provided in server rendered html?
+- If not checking for element.dataset, the attribute name could be the tag name like  <div filter--search> instead of <div data-filter--search>. Just less noisy to read and dashed attributes that are the same as the element name sounds rather safe. Not as idiomatic as data-attributes, but dunno, would make this that little bit more understandable I think.
+- I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
+*/
+
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
