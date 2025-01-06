@@ -17,7 +17,6 @@
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target']
 
-  styleElement
   selectors = {
     attrExact: (name, value) => `[data-${this.localName}-${name}="${value}" i]`,
     attrIncludes: (name, value) => `[data-${this.localName}-${name}*="${value}" i]`,
@@ -37,9 +36,14 @@ export class Filter extends HTMLElement {
     return document.getElementById(this.getAttribute('target')) || this
   }
 
+  #styleElement
+  get styleElement() {
+    this.#styleElement = this.#styleElement || this.appendChild(document.createElement('style'))
+    return this.#styleElement
+  }
+
   constructor() {
     super()
-    this.styleElement = this.styleElement || this.appendChild(document.createElement('style'))
     this.filterDebounced = debounce(this.filter.bind(this), 50)
     this.form && this.form.addEventListener('input', this.filterDebounced)
   }
