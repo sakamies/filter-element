@@ -45,10 +45,29 @@ export class Filter extends HTMLElement {
   constructor() {
     super()
     this.filterDebounced = debounce(this.filter.bind(this), 50)
-    this.form && this.form.addEventListener('input', this.filterDebounced)
   }
 
-  attributeChangedCallback() {
+  connectedCallback() {this.listen()}
+  disconnectedCallback() {this.unlisten()}
+  adoptedCallback() {this.resliten()}
+
+  #listening
+  listen() {
+    !this.#listening && this.form?.addEventListener('input', this.filterDebounced)
+    this.#listening = true
+  }
+  unlisten() {
+    this.form?.removeEventListener('input', this.filterDebounced)
+    this.#listening = false
+  }
+  relisten() {
+    this.unlisten();this.listen()
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'form' && newValue !== oldValue) {
+      this.resliten()
+    }
     this.filterDebounced()
   }
 
