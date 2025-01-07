@@ -7,6 +7,13 @@
 - I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
 */
 
+//TODO: The form to which the `form` attribute refers to may not exist yet when Filter is instantiated, so maybe the event listener should be attached to document and should check if e.target.form.name === this.getAttribute('form') and then do filtering
+// handleEvent(e) {
+//   if e.target.form.name === this.getAttribute('form') {
+//     filter()
+//   } jne jne
+// }
+
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
