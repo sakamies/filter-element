@@ -7,13 +7,6 @@
 - I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
 */
 
-//TODO: The form to which the `form` attribute refers to may not exist yet when Filter is instantiated, so maybe the event listener should be attached to document and should check if e.target.form.name === this.getAttribute('form') and then do filtering
-// handleEvent(e) {
-//   if e.target.form.name === this.getAttribute('form') {
-//     filter()
-//   } jne jne
-// }
-
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
@@ -23,6 +16,7 @@
 
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target']
+  static debounceDelay = 50 //Filter event is async. Max 20fps by default. Plenty often for user input, but hopefully won't grind to a halt if the user pounds their keyboard on a large dataset. Static property because I don't expect it to be customized much, but so it can still be set before instantiating an element if needed.
 
   selectors = {
     attrExact: (name, value) => `[data-${this.localName}-${name}="${value}" i]`,
@@ -51,31 +45,34 @@ export class Filter extends HTMLElement {
 
   constructor() {
     super()
-    this.filterDebounced = debounce(this.filter.bind(this), 50)
+    this.handleEvent = debounce(this.handleEvent.bind(this), Filter.debounceDelay)
+    // That debounce there returns a new function and thus makes sure this.handleEvent is always a unique new function of this class instance, so addEventListener and removeEventListener add and remove the same function reference.
   }
 
   connectedCallback() {this.listen()}
   disconnectedCallback() {this.unlisten()}
-  adoptedCallback() {this.relisten()}
+  adoptedCallback() {this.relisten()} // Makes sure listener is on correct document after element is moved from one document to another.
 
   #listening
   listen() {
-    !this.#listening && this.form?.addEventListener('input', this.filterDebounced)
+    !this.#listening && document.addEventListener('input', this.handleEvent)
     this.#listening = true
   }
   unlisten() {
-    this.form?.removeEventListener('input', this.filterDebounced)
+    document.removeEventListener('input', this.handleEvent)
     this.#listening = false
   }
   relisten() {
-    this.unlisten();this.listen()
+    this.unlisten()
+    this.listen()
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'form' && newValue !== oldValue) {
-      this.relisten()
-    }
-    this.filterDebounced()
+    this.filter()
+  }
+
+  handleEvent(e) {
+    if (e.target.form === this.form) this.filter()
   }
 
   dispatch(found) {
@@ -87,7 +84,7 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  filterDebounced
+  // handleEvent calls filter() instead of filter being the event handler, so filter is free to be called any time on the element if needed for whatever reason.
   filter() {
     const items = Array.from(this.target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
