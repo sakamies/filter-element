@@ -1,0 +1,3 @@
+- Set up class instance in constructor, but don't touch the dom here, nothing else might exist yet. Element may have been created with document.createElement().
+- disconnected/adopted/connected callbacks run when the element is un/re/connected to the dom. Set up dom related stuff and event listeners here. Be aware that the dom coming after or inside this element instance may still not be ready yet.
+- Set event listeners on document and check event argument to determine if the listener should run. This makes sure you shouldn't have to care about dom readiness state when setting your listeners. Old trick but still valid.
