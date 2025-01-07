@@ -56,7 +56,7 @@ export class Filter extends HTMLElement {
 
   connectedCallback() {this.listen()}
   disconnectedCallback() {this.unlisten()}
-  adoptedCallback() {this.resliten()}
+  adoptedCallback() {this.relisten()}
 
   #listening
   listen() {
@@ -73,7 +73,7 @@ export class Filter extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'form' && newValue !== oldValue) {
-      this.resliten()
+      this.relisten()
     }
     this.filterDebounced()
   }
