@@ -31,10 +31,10 @@
         document.addEventListener(tagName, event => {
           count.textContent = event.detail.found.length
         })
-
-        //Make sure the thing still works after being moved around in the dom
-        document.body.appendChild(document.querySelector(tagName))
       });
+
+      //Just to make sure there's no crash
+      document.createElement(tagName)
     </script>
   </head>
   <body>
@@ -54,7 +54,7 @@
         <input id="search-includes" name="search:includes:hilite" type="search">
       </div>
       <div class="field">
-        <label for="search-exact">Exact contents search</label>
+        <label for="search-exact">Exact text search</label>
         <!-- :exact suffix means that a data-attribute must be this exact value. -->
         <input id="search-exact" name="search:exact:hilite" type="search">
       </div>
@@ -97,7 +97,7 @@
     [target] Optional target element id. Will filter target element children. Optional, defaults to the filter element itself.
     Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. Defaults to system colors that are MarkText & Mark.
     -->
-    <filter- exact form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
+    <filter- form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
       <table>
         <caption aria-live="polite">
           <span id="count">5</span>
@@ -139,5 +139,21 @@
         </tbody>
       </table>
     </filter->
+
+    <br>
+    <br>
+    <hr>
+    <br>
+
+    <form>
+      <h2>Another instance just to test it works</h2>
+      <label for="search">Number in Spanish</label>
+      <input id="search" name="search">
+      <filter->
+        <div><i data-filter--search="Uno">Uno</i></div>
+        <div><i data-filter--search="Dos">Dos</i></div>
+        <div><i data-filter--search="Tres">Tres</i></div>
+      </filter->
+    </form>
   </body>
 </html>
