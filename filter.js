@@ -45,7 +45,8 @@ export class Filter extends HTMLElement {
 
   constructor() {
     super()
-    this.handleEvent = debounce(this.handleEvent.bind(this), Filter.debounceDelay)
+    this.filter = debounce(this.filter.bind(this), Filter.debounceDelay)
+    this.handleEvent = this.handleEvent.bind(this)
     // That debounce there returns a new function and thus makes sure this.handleEvent is always a unique new function of this class instance, so addEventListener and removeEventListener add and remove the same function reference.
   }
 
