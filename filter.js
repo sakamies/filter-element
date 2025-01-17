@@ -57,10 +57,12 @@ export class Filter extends HTMLElement {
   #listening
   listen() {
     !this.#listening && document.addEventListener('input', this.handleEvent)
+    !this.#listening && document.addEventListener('change', this.handleEvent)
     this.#listening = true
   }
   unlisten() {
     document.removeEventListener('input', this.handleEvent)
+    document.removeEventListener('change', this.handleEvent)
     this.#listening = false
   }
   relisten() {
