@@ -24,8 +24,11 @@ export class Filter extends HTMLElement {
     || console.warn('No form found for', this)
   }
 
-  get target() {
-    return document.getElementById(this.getAttribute('target')) || this
+  get targets() {
+    const targets = this.getAttribute('target')?.split(' ').map(target => {
+      return document.getElementById(target) || this
+    })
+    return Array.from(new Set(targets))
   }
 
   #styleElement
@@ -78,11 +81,15 @@ export class Filter extends HTMLElement {
   }
 
   filter() {
-    const items = Array.from(this.target.children)
+    this.targets.forEach(target => this.filterTarget(target))
+  }
+
+  filterTarget(target) {
+    const items = Array.from(target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
     const hasAttrs = data.map(this.hasAttributeSelectors, this).join('')
 
-    const found = Array.from(this.target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
+    const found = Array.from(target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
     if (!this.dispatch(found)) return //Event is cancelable
     items.forEach(item => item.hidden = !found.includes(item))
 
