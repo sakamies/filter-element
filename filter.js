@@ -1,12 +1,3 @@
-/*TODO:
-- Row selectors should be has or is, I mean
-  :scope > *:is([a*=b][a*=b],:has(a*=b):has(a*=b))
-  This would match the row as well as children. Not sure about the perf any more vs walking the dom with a tree walker
-- Automatically build index based on textContent of immediate children if index attributes were not provided in server rendered html?
-- If not checking for element.dataset, the attribute name could be the tag name like  <div filter--search> instead of <div data-filter--search>. Just less noisy to read and dashed attributes that are the same as the element name sounds rather safe. Not as idiomatic as data-attributes, but dunno, would make this that little bit more understandable I think.
-- I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
-*/
-
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
@@ -16,7 +7,7 @@
 
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target']
-  static debounceDelay = 50 //Filter event is async. Max 20fps by default. Plenty often for user input, but hopefully won't grind to a halt if the user pounds their keyboard on a large dataset. Static property because I don't expect it to be customized much, but so it can still be set before instantiating an element if needed.
+  static debounceDelay = 50
 
   selectors = {
     attrExact: (name, value) => `[data-${this.localName}-${name}="${value}" i]`,
@@ -47,12 +38,11 @@ export class Filter extends HTMLElement {
     super()
     this.filter = debounce(this.filter.bind(this), Filter.debounceDelay)
     this.handleEvent = this.handleEvent.bind(this)
-    // That debounce there returns a new function and thus makes sure this.handleEvent is always a unique new function of this class instance, so addEventListener and removeEventListener add and remove the same function reference.
   }
 
   connectedCallback() {this.listen()}
   disconnectedCallback() {this.unlisten()}
-  adoptedCallback() {this.relisten()} // Makes sure listener is on correct document after element is moved from one document to another.
+  adoptedCallback() {this.relisten()}
 
   #listening
   listen() {
@@ -87,7 +77,6 @@ export class Filter extends HTMLElement {
     return this.dispatchEvent(event)
   }
 
-  // handleEvent calls filter() instead of filter being the event handler, so filter is free to be called any time on the element if needed for whatever reason.
   filter() {
     const items = Array.from(this.target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
@@ -137,8 +126,6 @@ export class Filter extends HTMLElement {
   }
 }
 
-// This is like a few lines so I don't want this as an external dependency.
-// Not sure debounce necessary, but I would like to be as kind as I can to peoples devices. Like if you really pound your keyboard and the table is huge, maybe then this is needed.
 function debounce (fn, delay) {
   let id;
   return function (...args) {
