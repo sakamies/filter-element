@@ -25,10 +25,11 @@ export class Filter extends HTMLElement {
   }
 
   get targets() {
-    const targets = this.getAttribute('target')?.split(' ').map(target => {
-      return document.getElementById(target) || this
-    })
-    return Array.from(new Set(targets))
+    const targets = this.getAttribute('target')
+      .split(' ')
+      .map(str => document.getElementById(str))
+      .filter(node => node !== null)
+    return targets && targets.length && Array.from(targets) || [this]
   }
 
   #styleElement
@@ -93,7 +94,7 @@ export class Filter extends HTMLElement {
     if (!this.dispatch(found)) return //Event is cancelable
     items.forEach(item => item.hidden = !found.includes(item))
 
-    this.hilite(data.flatMap(this.hiliteSelectors, this).join(','))
+    this.hilite(data.flatMap(this.getHiliteSelectors, this).join(','))
   }
 
   attributeSelectors(name, value, flags) {
@@ -116,20 +117,23 @@ export class Filter extends HTMLElement {
     return flags.includes('not') && this.selectors.not(selector) || selector
   }
 
-  hiliteSelectors([name, value], flags) {
+  getHiliteSelectors([name, value], flags) {
     [name, ...flags] = name.split(':')
-    return flags.includes('hilite') && this.attributeSelectors(name, value, flags) || []
+    return flags.includes('hilite') && this.getAttributeSelectors(name, value, flags) || []
   }
 
-  hilite(attrsToHilite) {
-    if (attrsToHilite && this.target.id) {
-      const selector = `#${this.target.id} ${this.selectors.is(attrsToHilite)}`
-      const text = `var(--${this.localName}-marktext, MarkText)`
-      const mark = `var(--${this.localName}-mark, Mark)`
-      this.styleElement.innerHTML = `${selector} {color: ${text}; background-color: ${mark};`
-    } else {
-      this.styleElement.innerHTML = ''
-    }
+  hilite(selectors) {
+    const styles = this.targets.map(target => {
+      if (selectors && target.id) {
+        const selector = `#${target.id} ${this.selectors.is(selectors)}`
+        const text = `var(--${this.localName}-marktext, MarkText)`
+        const mark = `var(--${this.localName}-mark, Mark)`
+        return `${selector} {color: ${text}; background-color: ${mark};}`
+      } else {
+        return ''
+      }
+    })
+    this.styleElement.innerHTML = styles.join('\n')
   }
 }
 
