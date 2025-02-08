@@ -32,12 +32,6 @@ export class Filter extends HTMLElement {
     return targets && targets.length && Array.from(targets) || [this]
   }
 
-  #styleElement
-  get styleElement() {
-    this.#styleElement = this.#styleElement || this.appendChild(document.createElement('style'))
-    return this.#styleElement
-  }
-
   constructor() {
     super()
     this.filter = debounce(this.filter.bind(this), Filter.debounceDelay)
@@ -93,8 +87,6 @@ export class Filter extends HTMLElement {
     const found = Array.from(target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
     if (!this.dispatch(target, found)) return //Event is cancelable
     items.forEach(item => item.hidden = !found.includes(item))
-
-    this.hilite(data.flatMap(this.getHiliteSelectors, this).join(','))
   }
 
   getAttributeSelectors(name, value, flags) {
@@ -117,24 +109,10 @@ export class Filter extends HTMLElement {
     return flags.includes('not') && this.selectors.not(selector) || selector
   }
 
-  getHiliteSelectors([name, value], flags) {
-    [name, ...flags] = name.split(':')
-    return flags.includes('hilite') && this.getAttributeSelectors(name, value, flags) || []
-  }
-
-  hilite(selectors) {
-    const styles = this.targets.map(target => {
-      if (selectors && target.id) {
-        const selector = `#${target.id} ${this.selectors.is(selectors)}`
-        const text = `var(--${this.localName}-marktext, MarkText)`
-        const mark = `var(--${this.localName}-mark, Mark)`
-        return `${selector} {color: ${text}; background-color: ${mark};}`
-      } else {
-        return ''
-      }
-    })
-    this.styleElement.innerHTML = styles.join('\n')
-  }
+  // getHiliteSelectors([name, value], flags) {
+  //   [name, ...flags] = name.split(':')
+  //   return flags.includes('hilite') && this.getAttributeSelectors(name, value, flags) || []
+  // }
 }
 
 function debounce (fn, delay) {

@@ -30,7 +30,7 @@
         const count = document.querySelector('#count')
         document.addEventListener(tagName, event => {
           count.textContent = event.detail.found.length
-          // The event is cancelable. Using preventDefault will prevent hiding and highlighting the affected elements.
+          // The event is cancelable. Using preventDefault will prevent hiding the affected elements.
           // So you can grab the results of the filtering and do whatever if you need to.
           //event.preventDefault
         })
@@ -42,24 +42,23 @@
   </head>
   <body>
     <h1>Filter</h1>
-    <p>Matching rows will be shown. Matching cells will be highlighted.</p>
+    <p>Matching rows will be shown.</p>
 
     <form name="filters">
       <div class="field">
         <label for="search">Fuzzy words search</label>
         <!-- Default search behaviour is that the tagName-search attribute must include these words in any order, partial matches are shown. -->
-        <!-- :hilite suffix on input name to have any matches be highlighted. -->
-        <input id="search" name="search:hilite" type="search">
+        <input id="search" name="search" type="search">
       </div>
       <div class="field">
         <label for="search-includes">Partial search</label>
         <!-- :includes suffix mean that the tagName-search-includes attribute must include this text as is, partial matches are shown. -->
-        <input id="search-includes" name="search:includes:hilite" type="search">
+        <input id="search-includes" name="search:includes" type="search">
       </div>
       <div class="field">
         <label for="search-exact">Exact text search</label>
         <!-- :exact suffix means that the tagName-search-exact attribute must be this exact value. -->
-        <input id="search-exact" name="search:exact:hilite" type="search">
+        <input id="search-exact" name="search:exact" type="search">
       </div>
       <fieldset>
         <legend>Status</legend>
@@ -98,9 +97,8 @@
     <!--
     [form] Optional form name or id. If blank, closest parent form or the first form in the document is used.
     [target] Optional target element id. Will filter target element children. Optional, defaults to the filter element itself.
-    Use --{tagName}-marktext & --{tagName}-mark css variables to change word highlight colors. Defaults to system colors that are MarkText & Mark.
     -->
-    <filter- form="filters" target="gift-rows" style="--filter--mark: LemonChiffon;">
+    <filter- form="filters" target="gift-rows">
       <table>
         <caption aria-live="polite">
           <span id="count">5</span>
