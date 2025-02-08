@@ -1,0 +1,14 @@
+<script type="module">
+  import { Filter } from '/filter.js'
+  customElements.define('my-filter', Filter);
+</script>
+
+<form>
+  <label for="search">Fuzzy words search</label>
+  <input id="search" name="search" type="search">
+</form>
+
+<my-filter>
+  <div>Thing 1 search me</div>
+  <div>Thing 2 other thingy</div>
+</my-filter>

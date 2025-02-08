@@ -1,21 +1,23 @@
 /**
  * Custom element to filter contents inside it based on a form.
  * @module Filter
- * @param {string} form - Optional form name or id. If blank, closest parent form or the first form in the document is used.
+ * @param {string} form - Optional form name or id. Optional, defaults to closest parent form or the first form in the document.
  * @param {string} target - Optional target element id. Will filter target element children. Optional, defaults to the filter element itself.
  */
+
+const attrExact = (prefix, name, value) => `[${prefix}-${name}="${value}" i]`
+const attrIncludes = (prefix, name, value) => `[${prefix}-${name}*="${value}" i]`
+const has = str => `:has(${str})`
+const is = str => `:is(${str})`
+const not = str => `:not(${str})`
+const or = (...strs) => strs.join(',')
+const and = (...strs) => strs.join('')
+// (...strs) => ... by some magic acceps arguments to the function or an array as a single argument and just works.
+// You can call these like and('one', 'two') or and(['one', 'two']) and both return the same result.
 
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target']
   static debounceDelay = 50
-
-  selectors = {
-    attrExact: (name, value) => `[${this.localName}-${name}="${value}" i]`,
-    attrIncludes: (name, value) => `[${this.localName}-${name}*="${value}" i]`,
-    has: str => `:has(${str})`,
-    is: str => `:is(${str})`,
-    not: str => `:not(${str})`,
-  }
 
   get form() {
     return document.forms[this.getAttribute('form')]
@@ -25,7 +27,8 @@ export class Filter extends HTMLElement {
   }
 
   get targets() {
-    const targets = this.getAttribute('target')
+    const attr = this.getAttribute('target')
+    const targets = attr && attr
       .split(' ')
       .map(str => document.getElementById(str))
       .filter(node => node !== null)
@@ -82,37 +85,44 @@ export class Filter extends HTMLElement {
   filterTarget(target) {
     const items = Array.from(target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
-    const hasAttrs = data.map(this.getHasAttributeSelectors, this).join('')
+    const filterSelector = and(data.map(this.getFilterSelector, this))
 
-    const found = Array.from(target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
+    const found = Array.from(target.querySelectorAll(':scope > ' + (filterSelector || '*')))
     if (!this.dispatch(target, found)) return //Event is cancelable
     items.forEach(item => item.hidden = !found.includes(item))
   }
 
-  getAttributeSelectors(name, value, flags) {
+  // Returns an array of attribute selectors ['[a*=b]', '[a*=b]']
+  getEntrySelectors(name, value, flags) {
     name = CSS.escape(name)
-    let attrs
+    const tag = this.localName
     if (flags.includes('exact')) {
-      attrs = [this.selectors.attrExact(name, CSS.escape(value))]
-    } else if (flags.includes('includes')) {
-      attrs = [this.selectors.attrIncludes(name, CSS.escape(value))]
-    } else {
-      const words = value.trim().split(' ').map(CSS.escape)
-      attrs = words.map(word => this.selectors.attrIncludes(name, word))
+      return [attrExact(tag, name, CSS.escape(value))]
     }
-    return attrs
+    else if (flags.includes('includes')) {
+      return [attrIncludes(tag, name, CSS.escape(value))]
+    }
+    else {
+      const words = value.trim().split(' ').map(CSS.escape)
+      return words.map(word => attrIncludes(tag, name, word))
+    }
   }
 
-  getHasAttributeSelectors([name, value], flags) {
+  // Returns either format based on flag
+  // :is([a*=b][a*=b],:has([a*=b]):has([a*=b]))
+  // :not([a*=b][a*=b]):not(:has([a*=b]):has([a*=b]))
+  getFilterSelector([name, value], flags) {
     [name, ...flags] = name.split(':')
-    const selector = this.getAttributeSelectors(name, value, flags).map(this.selectors.has).join('')
-    return flags.includes('not') && this.selectors.not(selector) || selector
-  }
 
-  // getHiliteSelectors([name, value], flags) {
-  //   [name, ...flags] = name.split(':')
-  //   return flags.includes('hilite') && this.getAttributeSelectors(name, value, flags) || []
-  // }
+    const entrySelectors = this.getEntrySelectors(name, value, flags)
+    const isSelector = and(entrySelectors)
+    const hasSelector = and(entrySelectors.map(has))
+    const positiveSelector = is(or(isSelector, hasSelector))
+    const negativeSelector = and(not(isSelector), not(hasSelector))
+    //TODO: not sure negativeSelector is completely correct for fuzzy searches
+
+    return flags.includes('not') ? negativeSelector : positiveSelector
+  }
 }
 
 function debounce (fn, delay) {
