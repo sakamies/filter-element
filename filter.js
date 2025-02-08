@@ -72,13 +72,13 @@ export class Filter extends HTMLElement {
     if (e.target.form === this.form) this.filter()
   }
 
-  dispatch(found) {
+  dispatch(target, found) {
     const event = new CustomEvent(this.localName, {
       cancelable: true,
       bubbles: true,
       detail: {found},
     })
-    return this.dispatchEvent(event)
+    return target.dispatchEvent(event)
   }
 
   filter() {
@@ -91,7 +91,7 @@ export class Filter extends HTMLElement {
     const hasAttrs = data.map(this.getHasAttributeSelectors, this).join('')
 
     const found = Array.from(target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
-    if (!this.dispatch(found)) return //Event is cancelable
+    if (!this.dispatch(target, found)) return //Event is cancelable
     items.forEach(item => item.hidden = !found.includes(item))
 
     this.hilite(data.flatMap(this.getHiliteSelectors, this).join(','))
