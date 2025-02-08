@@ -14,19 +14,19 @@
         // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
         // Search by text from any column
         Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
-          el.setAttribute('data-'+tagName+'-search', el.textContent)
+          el.setAttribute(tagName+'-search', el.textContent)
         })
         // Gift type and checkboxes for filters
         Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute('data-'+tagName+'-gift', el.textContent)
+          el.setAttribute(tagName+'-gift', el.textContent)
         })
         // Last column is state
         Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
-          el.setAttribute('data-'+tagName+'-state', el.textContent)
+          el.setAttribute(tagName+'-state', el.textContent)
         })
 
         // Update found count and announce it with aria-live.
-        // Events and data-attributes are named whatever you choose as your tagName for this custom element.
+        // Events and attributes are named whatever you choose as your tagName for this custom element.
         const count = document.querySelector('#count')
         document.addEventListener(tagName, event => {
           count.textContent = event.detail.found.length
@@ -44,18 +44,18 @@
     <form name="filters">
       <div class="field">
         <label for="search">Fuzzy words search</label>
-        <!-- Default search behaviour is that a data-attribute must include these words in any order, partial matches are shown. -->
+        <!-- Default search behaviour is that the tagName-search attribute must include these words in any order, partial matches are shown. -->
         <!-- :hilite suffix on input name to have any matches be highlighted. -->
         <input id="search" name="search:hilite" type="search">
       </div>
       <div class="field">
         <label for="search-includes">Text search</label>
-        <!-- :includes suffix mean that a data-attribute must include this text as is, partial matches are shown. -->
+        <!-- :includes suffix mean that the tagName-search-includes attribute must include this text as is, partial matches are shown. -->
         <input id="search-includes" name="search:includes:hilite" type="search">
       </div>
       <div class="field">
         <label for="search-exact">Exact text search</label>
-        <!-- :exact suffix means that a data-attribute must be this exact value. -->
+        <!-- :exact suffix means that the tagName-search-exact attribute must be this exact value. -->
         <input id="search-exact" name="search:exact:hilite" type="search">
       </div>
       <fieldset>
@@ -150,9 +150,9 @@
       <label for="search">Number in Spanish</label>
       <input id="search" name="search">
       <filter->
-        <div><i data-filter--search="Uno">Uno</i></div>
-        <div><i data-filter--search="Dos">Dos</i></div>
-        <div><i data-filter--search="Tres">Tres</i></div>
+        <div><i filter--search="Uno">Uno</i></div>
+        <div><i filter--search="Dos">Dos</i></div>
+        <div><i filter--search="Tres">Tres</i></div>
       </filter->
     </form>
   </body>

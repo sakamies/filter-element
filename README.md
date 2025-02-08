@@ -14,7 +14,7 @@ Example usage. And yeah nothing's missing, this example works as is without any 
 </form>
 
 <my-filter>
-  <div>Thing 1 <span data-my-filter-search>search term</span></div>
-  <div>Thing 2 <span data-my-filter-search>other term</span></div>
+  <div>Thing 1 <span my-filter-search>search term</span></div>
+  <div>Thing 2 <span my-filter-search>other term</span></div>
 </my-filter>
 ```

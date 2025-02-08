@@ -10,8 +10,8 @@ export class Filter extends HTMLElement {
   static debounceDelay = 50
 
   selectors = {
-    attrExact: (name, value) => `[data-${this.localName}-${name}="${value}" i]`,
-    attrIncludes: (name, value) => `[data-${this.localName}-${name}*="${value}" i]`,
+    attrExact: (name, value) => `[${this.localName}-${name}="${value}" i]`,
+    attrIncludes: (name, value) => `[${this.localName}-${name}*="${value}" i]`,
     has: str => `:has(${str})`,
     is: str => `:is(${str})`,
     not: str => `:not(${str})`,
