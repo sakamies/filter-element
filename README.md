@@ -2,7 +2,7 @@
 
 Example usage. And yeah nothing's missing, this example works as is without any config. More elaborate example usage and available attributes are in `index.html` and `filter.js`.
 
-```
+```html
 <script>
   import { Filter } from '/filter.js'
   customElements.define('my-filter', Filter);

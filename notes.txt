@@ -1,12 +1,24 @@
-Filter event is async. Max 20fps by default. Plenty often for user input, but hopefully won't grind to a halt if the user pounds their keyboard on a large dataset. Static property because I don't expect it to be customized much, but so it can still be set before instantiating an element if needed.
+## TODO
 
+- Element name could be filter-children
 
+- Make example with radios like crisp comboboxes, so search field plus filterable radios
 
-# TODO
+- Some mechanism to set filtered out elements as disabled? Probs not a direct feature, but rather for any project using filterer to implement itself. Maybe add .matches and .filteredout or soemthing to the event details so you can respond to those any way you want. Maybe an optional callback for while filtering to be run for every element, would save looping everything twice. These kindsa hooks will inevitably lead to all kinds of hacks though, hooks are bad.
 
 - Row selectors should be has or is, I mean
   :scope > *:is([a*=b][a*=b],:has(a*=b):has(a*=b))
   This would match the row as well as children. Not sure about the perf any more vs walking the dom with a tree walker
 - Automatically build index based on textContent of immediate children if index attributes were not provided in server rendered html?
-- If not checking for element.dataset, the attribute name could be the tag name like  <div filter--search> instead of <div data-filter--search>. Just less noisy to read and dashed attributes that are the same as the element name sounds rather safe. Not as idiomatic as data-attributes, but dunno, would make this that little bit more understandable I think.
-- I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
+
+- `case-sensitive` or `match-case` attribute? because now the search is not case sensitive.
+
+----
+
+## Notes
+
+I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
+
+Filter event is async. Max 20fps by default. Plenty often for user input, but hopefully won't grind to a halt if the user pounds their keyboard on a large dataset. Static property because I don't expect it to be customized much, but so it can still be set before instantiating an element if needed.
+
+Since the filter is not searching based on `element.dataset`, the attribute name is the tag name like  <div filter--search> instead of <div data-filter--search>. A little bit less noisy to read and dashed attributes that are the same as the element name sounds rather safe, since the author should be the one naming the element per project anyway. Not as idiomatic as data-attributes, but this makes the examples and code little bit more understandable I think.

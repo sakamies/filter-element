@@ -88,7 +88,7 @@ export class Filter extends HTMLElement {
   filterTarget(target) {
     const items = Array.from(target.children)
     const data = Array.from(new FormData(this.form)).filter(([_, v]) => v)
-    const hasAttrs = data.map(this.hasAttributeSelectors, this).join('')
+    const hasAttrs = data.map(this.getHasAttributeSelectors, this).join('')
 
     const found = Array.from(target.querySelectorAll(':scope > ' + (hasAttrs || '*')))
     if (!this.dispatch(found)) return //Event is cancelable
@@ -97,7 +97,7 @@ export class Filter extends HTMLElement {
     this.hilite(data.flatMap(this.getHiliteSelectors, this).join(','))
   }
 
-  attributeSelectors(name, value, flags) {
+  getAttributeSelectors(name, value, flags) {
     name = CSS.escape(name)
     let attrs
     if (flags.includes('exact')) {
@@ -111,9 +111,9 @@ export class Filter extends HTMLElement {
     return attrs
   }
 
-  hasAttributeSelectors([name, value], flags) {
+  getHasAttributeSelectors([name, value], flags) {
     [name, ...flags] = name.split(':')
-    const selector = this.attributeSelectors(name, value, flags).map(this.selectors.has).join('')
+    const selector = this.getAttributeSelectors(name, value, flags).map(this.selectors.has).join('')
     return flags.includes('not') && this.selectors.not(selector) || selector
   }
 
