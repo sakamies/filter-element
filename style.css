@@ -41,8 +41,12 @@ caption, td, th {
 
 .field {
   display: grid;
-  grid-template-columns: 12rem 1fr;
+  grid-template-columns: 11rem 1fr;
+  gap: .5rem;
   place-items: center start;
   margin-block-start: 1em;
   margin-block-end: 1em;
+}
+.field small {
+  grid-column: 1 / -1;
 }

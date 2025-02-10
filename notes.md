@@ -27,9 +27,17 @@
 
 - Element default name could be filter-children
 
+- Not sure negativeSelector is completely correct for fuzzy searches
+
 ----
 
 ## Notes
+
+```js
+(...strs) => strs.join('')
+```
+By some magic that syntax acceps a list of arguments to the function or an array as a single argument and just works.
+You can call these like and('one', 'two') or and(['one', 'two']) and both return the same result.
 
 I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
 
