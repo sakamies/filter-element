@@ -47,12 +47,12 @@
       <div class="field">
         <label for="search-includes">Search</label>
         <input id="search-includes" name="search" type="search">
-        <small>'tagName-search' attribute must include this text as a substring.</small>
+        <!-- 'tagName-search' attribute must include this text as a substring. -->
       </div>
       <div class="field">
         <label for="search">Fuzzy words search</label>
         <input id="search" name="search:fuzzy" type="search">
-        <small>'tagName-search' attribute must include these words in any order.</small>
+        <!-- 'tagName-search' attribute must include these words in any order. -->
       </div>
       <div class="field">
         <label for="search">Negative fuzzy search</label>
@@ -61,12 +61,12 @@
       <div class="field">
         <label for="search-exact">Exact text search</label>
         <input id="search-exact" name="search:exact" type="search">
-        <small>'tagName-search' attribute must be this exact value.</small>
+        <!-- 'tagName-search' attribute must be this exact value. -->
       </div>
       <br>
+      <!-- Radios and checkboxes, selects and textareas work the same as text inputs. -->
       <fieldset>
         <legend>Status</legend>
-        <!-- Radios work the same as text inputs. Row must include the value of the checked radio. If value has spaces, must include all words in any order. -->
         <input type="radio" id="state-any" name="state" checked value>
         <label for="state-any">Any</label>
         <input type="radio" id="state-sent" name="state" value="sent">
@@ -77,17 +77,15 @@
         <label for="state-late">Late</label>
       </fieldset>
       <br>
+      <!-- Radios and checkboxes work the same as text inputs. Here 'tagName-state' must include the value of the checked radio. -->
       <fieldset>
         <legend>Gift</legend>
-        <!-- Same as radios, row must have all words of checked radio in any order. -->
         <input type="checkbox" id="gift-is-plush" name="gift" value="plush">
         <label for="gift-is-plush">Plush</label>
         <input type="checkbox" id="gift-is-fragrant" name="gift" value="fragrant">
         <label for="gift-is-fragrant">Fragrant</label>
         <input type="checkbox" id="gift-is-spooky" name="gift" value="spooky">
         <label for="gift-is-spooky">Spooky</label>
-
-        <!-- This checkbox is the same as selecting fragrant & spooky checkboxes on their own. -->
         <input type="checkbox" id="gift-is-spooky-and-fragrant" name="gift" value="spooky fragrant">
         <label for="gift-is-spooky-and-fragrant">Spooky & Fragrant</label>
       </fieldset>
