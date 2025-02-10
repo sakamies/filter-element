@@ -12,11 +12,9 @@ const is = str => `:is(${str})`
 const not = str => `:not(${str})`
 const or = (...strs) => strs.join(',')
 const and = (...strs) => strs.join('')
-// (...strs) => ... by some magic acceps arguments to the function or an array as a single argument and just works.
-// You can call these like and('one', 'two') or and(['one', 'two']) and both return the same result.
 
 export class Filter extends HTMLElement {
-  static observedAttributes = ['form', 'target']
+  static observedAttributes = ['form', 'target', 'index']
   static debounceDelay = 50
 
   get form() {
@@ -62,7 +60,23 @@ export class Filter extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'index') {
+      if (oldValue !== null) this.index(oldValue, 'remove')
+      if (newValue !== null) this.index(newValue, 'add')
+    }
     this.filter()
+  }
+
+  index(name, method) {
+    const nodes = this.targets.flatMap(t => Array.from(t.children))
+    nodes.forEach(node => {
+      if (method === 'add') {
+        node.setAttribute(this.localName + '-' + name, node.textContent)
+      }
+      if (method === 'remove') {
+        node.removeAttribute(this.localName + '-' + name)
+      }
+    })
   }
 
   handleEvent(e) {
@@ -119,7 +133,6 @@ export class Filter extends HTMLElement {
     const hasSelector = and(entrySelectors.map(has))
     const positiveSelector = is(or(isSelector, hasSelector))
     const negativeSelector = and(not(isSelector), not(hasSelector))
-    //TODO: not sure negativeSelector is completely correct for fuzzy searches
 
     return flags.includes('not') ? negativeSelector : positiveSelector
   }

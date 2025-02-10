@@ -1,20 +1,30 @@
-# A custom element for filtering a list of elements based on a form
+# Filter
 
-Example usage. And yeah nothing's missing, this example works as is without any config. More elaborate example usage and available attributes are in `index.html` and `filter.js`.
+A custom element for filtering a list of elements based on a form.
+
+## Getting started
+
+- Put filter.js into your project.
+- Import the module and name your tag.
+- Add a form.
+- Add elements to filter.
+- Build an automatic index with the `index` attribute.
 
 ```html
-<script>
-  import { Filter } from '/filter.js'
-  customElements.define('my-filter', Filter);
+<script type="module">
+  import {Filter} from '/filter.js'
+  customElements.define('filter-', Filter);
 </script>
 
 <form>
-  <label for="search">Fuzzy words search</label>
-  <input id="search" name="search" type="search">
+  <label for="search">Search</label>
+  <input id="search" name="search">
 </form>
 
-<my-filter>
-  <div>Thing 1 <span my-filter-search>search term</span></div>
-  <div>Thing 2 <span my-filter-search>other term</span></div>
-</my-filter>
+<filter- index="search">
+  <p>Yks</p>
+  <p>Kaks</p>
+  <p>Kolme</p>
+</filter->
 ```
+
