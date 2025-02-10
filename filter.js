@@ -99,12 +99,12 @@ export class Filter extends HTMLElement {
     if (flags.includes('exact')) {
       return [attrExact(tag, name, CSS.escape(value))]
     }
-    else if (flags.includes('includes')) {
-      return [attrIncludes(tag, name, CSS.escape(value))]
-    }
-    else {
+    else if (flags.includes('fuzzy')) {
       const words = value.trim().split(' ').map(CSS.escape)
       return words.map(word => attrIncludes(tag, name, word))
+    }
+    else {
+      return [attrIncludes(tag, name, CSS.escape(value))]
     }
   }
 

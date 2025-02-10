@@ -42,24 +42,28 @@
   </head>
   <body>
     <h1>Filter</h1>
-    <p>Matching rows will be shown.</p>
 
     <form name="filters">
       <div class="field">
-        <label for="search">Fuzzy words search</label>
-        <!-- Default search behaviour is that the tagName-search attribute must include these words in any order, partial matches are shown. -->
-        <input id="search" name="search" type="search">
+        <label for="search-includes">Search</label>
+        <input id="search-includes" name="search" type="search">
+        <small>'tagName-search' attribute must include this text as a substring.</small>
       </div>
       <div class="field">
-        <label for="search-includes">Partial search</label>
-        <!-- :includes suffix mean that the tagName-search-includes attribute must include this text as is, partial matches are shown. -->
-        <input id="search-includes" name="search:includes" type="search">
+        <label for="search">Fuzzy words search</label>
+        <input id="search" name="search:fuzzy" type="search">
+        <small>'tagName-search' attribute must include these words in any order.</small>
+      </div>
+      <div class="field">
+        <label for="search">Negative fuzzy search</label>
+        <input id="search" name="search:fuzzy:not" type="search">
       </div>
       <div class="field">
         <label for="search-exact">Exact text search</label>
-        <!-- :exact suffix means that the tagName-search-exact attribute must be this exact value. -->
         <input id="search-exact" name="search:exact" type="search">
+        <small>'tagName-search' attribute must be this exact value.</small>
       </div>
+      <br>
       <fieldset>
         <legend>Status</legend>
         <!-- Radios work the same as text inputs. Row must include the value of the checked radio. If value has spaces, must include all words in any order. -->
