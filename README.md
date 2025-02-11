@@ -78,7 +78,7 @@ All attributes work in combination. You can mix and match autoindexing and manua
 </filter->
 ```
 
-Check for complete working examples in [index.html](sakamies.github.io/filterer/index.html) and [simple.html](sakamies.github.io/filterer/simple.html).
+Check for complete working examples in [index.html](sakamies.github.io/filter-element/index.html) and [simple.html](sakamies.github.io/filter-element/simple.html).
 
 ----
 
