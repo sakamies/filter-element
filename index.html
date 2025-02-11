@@ -3,41 +3,11 @@
   <head>
     <title>Search filter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="index.html.css">
     <script type="module">
       import { Filter } from '/filter.js'
-      const tagName = 'filter-'
-      customElements.define(tagName, Filter);
-
-      document.addEventListener("DOMContentLoaded", () => {
-
-        // Search index should be rendered into the html already, but this is to illustrate building a search index so I don't have to hand code it into this example.
-        // Search by text from any column
-        Array.from(document.querySelectorAll('tbody tr > :is(th,td)')).forEach(el => {
-          el.setAttribute(tagName+'-search', el.textContent)
-        })
-        // Gift type and checkboxes for filters
-        Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
-          el.setAttribute(tagName+'-gift', el.textContent)
-        })
-        // Last column is state
-        Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
-          el.setAttribute(tagName+'-state', el.textContent)
-        })
-
-        // Update found count and announce it with aria-live.
-        // Events and attributes are named whatever you choose as your tagName for this custom element.
-        const count = document.querySelector('#count')
-        document.addEventListener(tagName, event => {
-          count.textContent = event.detail.found.length
-          // The event is cancelable. Using preventDefault will prevent hiding the affected elements.
-          // So you can grab the results of the filtering and do whatever if you need to.
-          //event.preventDefault
-        })
-      });
-
-      //Just to make sure there's no crash
-      document.createElement(tagName)
+      // Name the element anything you like.
+      customElements.define('filter-', Filter);
     </script>
   </head>
   <body>
@@ -47,8 +17,9 @@
       <div class="field">
         <label for="search-includes">Search</label>
         <input id="search-includes" name="search" type="search">
-        <!-- 'tagName-search' attribute must include this text. -->
+        <!-- 'filter--search' attribute must include this text. -->
       </div>
+
       <!-- Radios and checkboxes, selects and textareas work the same as text inputs. -->
       <fieldset>
         <legend>Status</legend>
@@ -61,8 +32,8 @@
         <input type="radio" id="state-late" name="state" value="late">
         <label for="state-late">Late</label>
       </fieldset>
-      <br>
-      <!-- Radios and checkboxes work the same as text inputs. Here 'tagName-state' must include the value of the checked radio. -->
+
+      <!-- Radios and checkboxes work the same as text inputs. Here 'filter--state' must include the value of the checked radio. -->
       <fieldset>
         <legend>Gift</legend>
         <input type="checkbox" id="gift-is-plush" name="gift" value="plush">
@@ -126,5 +97,37 @@
         </tbody>
       </table>
     </filter->
+
+    <script>
+      // Your search index should be rendered into the html already, but this is to illustrate how to build that index. The filter element does not do any normalization by itself. Normalization needs to happen when you are building your search index.
+
+      // If you don't have multiple attributes to search, you can use index="namehere" attribute on your filter element to build an index automatically. (from the textContent of the children of your targets)
+
+      // Search by whole rows text content
+      Array.from(document.querySelectorAll('tbody tr')).forEach(el => {
+        el.setAttribute('filter--search', el.textContent.replaceAll(/\s+/g, ' '))
+        // Collapse all whitespace to single space-------------------^^^^^^^^^^^
+      })
+
+      // Gift type and checkboxes
+      Array.from(document.querySelectorAll('tbody tr > :nth-child(2)')).forEach(el => {
+        el.setAttribute('filter--gift', el.textContent)
+      })
+
+      // Last column is state and radio buttons
+      Array.from(document.querySelectorAll('tbody tr > :last-child')).forEach(el => {
+        el.setAttribute('filter--state', el.textContent)
+      })
+
+      // Update found count and announce it with aria-live.
+      // Events and attributes are named whatever you choose as your tagName for this custom element.
+      const count = document.querySelector('#count')
+      document.addEventListener('filter-', event => {
+        count.textContent = event.detail.found.length
+        // The event is cancelable. Using preventDefault will prevent hiding the affected elements.
+        // So you can grab the results of the filtering and do whatever if you need to.
+        //event.preventDefault
+      })
+    </script>
   </body>
 </html>

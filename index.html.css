@@ -12,15 +12,20 @@ body {
   margin: auto;
   padding: 0 1rem;
 }
+p {
+  margin: 0 0 1rem 0;
+}
 input:not([type="image" i], [type="range" i], [type="checkbox" i], [type="radio" i]),
 fieldset {
   appearance: none;
   font-family: inherit;
   font-size: inherit;
   padding: .5rem;
-  margin: 0;
   width: 100%;
   border: 1px solid;
+}
+fieldset {
+  margin: 0 0 1rem 0;
 }
 table {
   width: 100%;
@@ -44,8 +49,7 @@ caption, td, th {
   grid-template-columns: 11rem 1fr;
   gap: .5rem;
   place-items: center start;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
+  margin: 0 0 1rem 0;
 }
 .field small {
   grid-column: 1 / -1;

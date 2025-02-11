@@ -16,13 +16,9 @@
 
 ## Notes
 
-```js
-(...strs) => strs.join('')
-```
-By some magic that syntax acceps a list of arguments to the function or an array as a single argument and just works.
-You can call these like and('one', 'two') or and(['one', 'two']) and both return the same result.
+I don't like setting flags on the name attribute like the name="search:not". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
 
-I don't like setting flags on the name attribute like the name="search:include". I could use form.elements instead of FormData so I could read attributes on the form elements. On the other hand with flags in the name, the flags will go to the server also on submit. Having flags in the name would keep symmetry with everything that's available to filter.js and the server on submit.
+Flags could maybe be on the index attributes themselves? Like `filter--search:not="value"`
 
 Filter event is async. Max 20fps by default. Plenty often for user input, but hopefully won't grind to a halt if the user pounds their keyboard on a large dataset. Static property because I don't expect it to be customized much, but so it can still be set before instantiating an element if needed.
 
