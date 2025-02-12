@@ -3,10 +3,9 @@
   <head>
     <title>Search filter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="index.html.css">
+    <link rel="stylesheet" href="examples.css">
     <script type="module">
       import { Filter } from './filter.js'
-      // Name the element anything you like.
       customElements.define('filter-', Filter);
     </script>
   </head>
@@ -14,9 +13,9 @@
     <h1>Filter</h1>
 
     <form name="filters">
-      <div class="field">
-        <label for="search-includes">Search</label>
-        <input id="search-includes" name="search" type="search">
+      <div>
+        <label for="search">Search</label>
+        <input id="search" name="search" type="search">
         <!-- 'filter--search' attribute must include this text. -->
       </div>
 
@@ -54,7 +53,7 @@
 
     <!-- [form=""] Optional form name or id. If blank, closest parent form or the first form in the document is used. -->
     <!-- [target=""] Optional target element id. Will filter target element children. Optional, defaults to the filter element itself. -->
-    <!-- [index=""] Optional input element name to automatically build an index for that name. Handy for simple cases.-->
+    <!-- [auto-index=""] Optional name to automatically build an index for that name. -->
     <filter- form="filters" target="gift-rows">
       <table>
         <caption aria-live="polite">

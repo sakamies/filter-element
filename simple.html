@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="examples.css">
+</head>
+<body>
+
+<h1>Simple example</h1>
+
 <script type="module">
   import {Filter} from './filter.js'
   customElements.define('filter-', Filter);
@@ -8,8 +19,11 @@
   <input id="search" name="search">
 </form>
 
-<filter- index="search">
-  <p>Yks</p>
-  <p>Kaks</p>
-  <p>Kolme</p>
+<filter- auto-index="search">
+  <div>Yks</div>
+  <div>Kaks</div>
+  <div>Kolme</div>
 </filter->
+
+</body>
+</html>
