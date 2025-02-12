@@ -67,8 +67,8 @@ All attributes work in combination. You can mix and match autoindexing and manua
   <ul id="my-target-one">
     <li>
       Some content
-      <span filter--custom-term="Custom search term here">
-        Custom search term here
+      <span filter--custom="Custom search term">
+        Custom search term
       </span>
     </li>
     <li>…</li>
