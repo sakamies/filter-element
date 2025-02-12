@@ -18,7 +18,7 @@ export class Filter extends HTMLElement {
     return targets && targets.length && Array.from(targets) || [this]
   }
 
-  get filterBy() {
+  get #filterBy() {
     const value = this.getAttribute('filter-by')
     return value && value.split(' ')
   }
@@ -87,7 +87,7 @@ export class Filter extends HTMLElement {
 
   #filterDebounced
   #filter = () => {
-    const keys = this.filterBy
+    const keys = this.#filterBy
     const data = Array.from(new FormData(this.form))
       .filter(([name, value]) => value) // Skip empty values
       .filter(([name, value]) => !keys || keys.includes(name)) // Only consider keys in filter-by attribute if it exists.
