@@ -42,15 +42,17 @@ Add some content to filter. Build an automatic index with the `auto-index` attri
 
 The attribute is your chosen tag name, a dash and the form element name you want this data to match to. In this case it's `filter-` + `-` + `search`. Could be for example `my-filter-email` if you named your element `my-filter` and were searching by `email`.
 
-Listen to events any time filtering happens. The event gets the found elements in the details.
+Listen to events any time filtering happens.
 
 ```js
 document.addEventListener('filter-', event => {
-  console.log(event.target, event.details.found)
+  console.log(event.target, event.details.found, event.details.hidden)
 })
 ```
 
-This event is cancelable with `event.preventDefault()`. Canceling the event prevents filter from showing and hiding elements and you can do whatever you need with the matches yourself.
+- `event target` is the list of elements that is being filtered.
+- Gets found and hidden elements in its details.
+- Cancelable with `event.preventDefault()`. Canceling the event prevents filter from showing and hiding elements and you can do whatever you need with the matches yourself.
 
 ## Kichen sink
 
@@ -83,6 +85,32 @@ All attributes work in combination. You can mix and match autoindexing and manua
 ```
 
 Check for complete working examples in [index.html](https://sakamies.github.io/filter-element/index.html) and [simple.html](https://sakamies.github.io/filter-element/simple.html).
+
+## Attributes
+
+### `form`
+
+Optional form that you want to have the filter listen to. By default, the filter element finds the closest parent form, or the first form in the document. This attrigute works exactly the same as the [form attribute on input elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
+
+### `target`
+
+Optional space separated list of the id's of elements you want to filter. By default the filter elements filters its own children, but you can target any elements with the target attributes.
+
+### `filter-by`
+
+Optional space separated list of [`name`s of the inputs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#name) you want to filter by. By default, filtering will happen by all inputs in the form that the filter listens to.
+
+### `auto-index`
+
+## Properties
+
+### `form`
+
+### `targets`
+
+## Events
+
+### `tagName`
 
 ----
 
