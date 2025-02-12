@@ -74,9 +74,7 @@ All attributes work in combination. You can mix and match autoindexing and manua
     <li>…</li>
   </ul>
   <p>…</p>
-  <ul id="my-target-two">
-    …
-  </ul>
+  <ul id="my-target-two">…</ul>
 </filter->
 ```
 
