@@ -124,9 +124,8 @@
       const count = document.querySelector('#count')
       document.addEventListener('filter-', event => {
         count.textContent = event.detail.found.length
-        // The event is cancelable. Using preventDefault will prevent hiding the affected elements.
+        // The event is cancelable. Using event.preventDefault() will prevent hiding the affected elements.
         // So you can grab the results of the filtering and do whatever if you need to.
-        //event.preventDefault
       })
     </script>
   </body>

@@ -46,7 +46,7 @@ Listen to events any time filtering happens. The event gets the found elements i
 
 ```js
 document.addEventListener('filter-', event => {
-  console.log(event.details.found)
+  console.log(event.target, event.details.found)
 })
 ```
 
@@ -61,19 +61,21 @@ The filter attributes can be on any descendants of your target, the immediate ch
 All attributes work in combination. You can mix and match autoindexing and manually added filter attributes.
 
 ```html
-<form id="my-form">...</form>
-<filter- form="my-form" target="my-target-one my-target-two" index="textcontent">
-  <p>...</p>
+<form id="my-form">…</form>
+<filter- form="my-form" target="my-target-one my-target-two" index="search">
+  <p>…</p>
   <ul id="my-target-one">
     <li>
       Some content
-      <span filter--search="Search term here">Search term here</span>
+      <span filter--custom-term="Custom search term here">
+        Custom search term here
+      </span>
     </li>
-    <li>...</li>
+    <li>…</li>
   </ul>
-  <p>...</p>
+  <p>…</p>
   <ul id="my-target-two">
-    ...
+    …
   </ul>
 </filter->
 ```
