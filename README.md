@@ -22,10 +22,10 @@ Add a form to do the filtering with. Works with any type of form elements.
 </form>
 ```
 
-Add some content to filter. Build an automatic index with the `index` attribute...
+Add some content to filter. Build an automatic index with the `auto-index` attribute...
 
 ```html
-<filter- index="search">
+<filter- auto-index="search">
   <p>One</p>
   <p>Two</p>
 </filter->
@@ -42,6 +42,8 @@ Add some content to filter. Build an automatic index with the `index` attribute.
 
 The attribute is your chosen tag name, a dash and the form element name you want to search by. In this case it's `filter-` + `-` + `search`. Could be for example `my-filter-email` if you named your element `my-filter` and were searching by `email`.
 
+Choose which
+
 Listen to events any time filtering happens. The event gets the found elements in the details.
 
 ```js
@@ -54,15 +56,19 @@ This event is cancelable with `event.preventDefault()`. Canceling the event prev
 
 ## Kichen sink
 
-Choose your form and filterable list of elements with `form` and `target` attributes. These attributes expect the ids of the elements you are referring to. You can have multiple targets by adding multiple id's separated by spaces.
+Choose your form, fields to filter by and filterable list of elements with `form` and `target` and `filter-by` attributes. `form` and `target` attributes expect the ids of the elements you are referring to. `filter-by` expects the `name`s of the inputs you want to filter by. You can have multiple targets and input names by adding multiple id's and names separated by spaces.
 
 The filter attributes can be on any descendants of your target, the immediate children of your target will still get filtered based on those attributes.
 
 All attributes work in combination. You can mix and match autoindexing and manually added filter attributes.
 
 ```html
-<form id="my-form">…</form>
-<filter- form="my-form" target="my-target-one my-target-two" index="search">
+<form id="my-form">
+  …
+  <input name="name-one" …>
+  …
+</form>
+<filter- form="my-form" target="my-target-one my-target-two" filter-by="name-one name-two" auto-index="search">
   <p>…</p>
   <ul id="my-target-one">
     <li>
