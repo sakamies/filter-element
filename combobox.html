@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simplified combobox alternative</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="examples.css">
+  <script type="module">
+    import {Filter} from './filter.js'
+    customElements.define('filter-', Filter);
+  </script>
+</head>
+<body>
+
+  <h1>Simplified combobox alternative</h1>
+  <p>Comboboxes are super hard to make really good and well accessible. Trying out if a search and radios could be enough. Maybe not very sexy, but works for everybody.</p>
+
+  <form>
+    <fieldset>
+      <legend>Choose person</legend>
+
+      <div>
+        <label for="find" hidden>Find by name</label>
+        <input id="find" name="find" type="search">
+        <small>
+          <output for="find" id="found-count"></output>
+        </small>
+      </div>
+
+      <!-- Filter defaults to filtering by the whole form, so let's only consider the `find` field for filtering. Without the filter-by attribute, the list would be filtered by the radio buttons inside the list. -->
+      <filter- filter-by="find" auto-index="find">
+        <div>
+          <input id="person-1" type="radio" name="person" value="1">
+          <label for="person-1">Nico Underwood</label>
+        </div>
+        <div>
+          <input id="person-2" type="radio" name="person" value="2">
+          <label for="person-2">Ensley Mayo</label>
+        </div>
+        <div>
+          <input id="person-3" type="radio" name="person" value="3">
+          <label for="person-3">Avayah Sanders</label>
+        </div>
+        <div>
+          <input type="radio">
+          <label>etc...</label>
+        </div>
+        <div>
+          <input type="radio">
+          <label>etc...</label>
+        </div>
+        <!-- And so on, imagine this is a long list. -->
+      </filter->
+
+    </fieldset>
+  </form>
+
+  <script>
+    document.addEventListener('filter-', event => {
+      // Deselect selection if it gets filtered out
+      const hiddenSelection = event.target.querySelector('[hidden] :checked')
+      if (hiddenSelection) {
+        hiddenSelection.checked = false
+      }
+
+      // Announce number of items.
+      const text = `${event.detail.found.length} names to choose from`
+      document.getElementById('found-count').textContent = text
+    })
+  </script>
+</body>
+</html>
