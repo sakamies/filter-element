@@ -40,9 +40,7 @@ Add some content to filter. Build an automatic index with the `auto-index` attri
 </filter->
 ```
 
-The attribute is your chosen tag name, a dash and the form element name you want to search by. In this case it's `filter-` + `-` + `search`. Could be for example `my-filter-email` if you named your element `my-filter` and were searching by `email`.
-
-Choose which
+The attribute is your chosen tag name, a dash and the form element name you want this data to match to. In this case it's `filter-` + `-` + `search`. Could be for example `my-filter-email` if you named your element `my-filter` and were searching by `email`.
 
 Listen to events any time filtering happens. The event gets the found elements in the details.
 
