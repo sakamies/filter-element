@@ -109,6 +109,14 @@ Optional space separated list of [`name`s of the inputs](https://developer.mozil
 
 ### `index`
 
+Build an automatic index for your chosen form field by setting `index="field-name-here"`.
+
+### `tagName-fieldName`
+
+Build a manual search index by setting attributes on any descendants of your filter targets.
+
+The attribute is your chosen tag name, a dash and the form element name you want this data to match to. For example `my-filter-search` to filter by any inputs that have the name `search`.
+
 ## Properties
 
 ### `form`
