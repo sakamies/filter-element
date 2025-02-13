@@ -61,7 +61,7 @@ document.addEventListener('filter-', event => {
 - Gets found and hidden elements in its details.
 - Cancelable with `event.preventDefault()`. Canceling the event prevents filter from showing and hiding elements and you can do whatever you need with the matches yourself.
 
-## Kichen sink
+## Kitchen sink
 
 Choose your form, fields to filter by and filterable list of elements with `form`, `include`, `exclude` `target` attributes. `form` and `target` attributes expect the ids of the elements you are referring to. `include` and `exclude` expect the `name`s of the inputs you want to participate in filtering. You can have multiple includes, excludes and targets by adding multiple names and id's separated by spaces.
 
