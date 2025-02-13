@@ -7,10 +7,11 @@ A custom element for filtering a list of elements based on a form.
 - [Attributes](#attributes)
 - [Properties](#properties)
 - [Events](#events)
+- [Licence, NPM module?](#licence-npm-module)
 
 ## Getting started
 
-Put `filter.js` into your project, import it and name your tag whatever you like.
+Put `filter.js` into your project, import it and name your tag whatever you like. Filter uses the `hidden` attribute to show/hide elements and does not need any css by default.
 
 ```html
 <script type="module">
@@ -112,11 +113,23 @@ Optional space separated list of [`name`s of the inputs](https://developer.mozil
 
 ### `form`
 
+The form that the filter instance listens to.
+
 ### `targets`
+
+Array of target elements that the filter instance is filtering.
 
 ## Events
 
 ### `tagName`
+
+Any time filtering happens, the filter element will emit one event per a target that is being filtered. The event name is the tag name you chose for your filter element.
+
+`event.target` is the target being filtered.
+
+`event.detail.found` & `event.detail.hidden` contain the children of `target` that matched and didn't match the filter.
+
+`event.preventDefault()` will cancel the filter setting the `hidden` property on `found` and `hidden` elements.
 
 ----
 
