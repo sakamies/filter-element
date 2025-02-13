@@ -22,10 +22,10 @@ Add a form to do the filtering with. Works with any type of form elements.
 </form>
 ```
 
-Add some content to filter. Build an automatic index with the `auto-index` attribute...
+Add some content to filter. Build an automatic index with the `index` attribute...
 
 ```html
-<filter- auto-index="search">
+<filter- index="search">
   <p>One</p>
   <p>Two</p>
 </filter->
@@ -56,7 +56,7 @@ document.addEventListener('filter-', event => {
 
 ## Kichen sink
 
-Choose your form, fields to filter by and filterable list of elements with `form` and `target` and `filter-by` attributes. `form` and `target` attributes expect the ids of the elements you are referring to. `filter-by` expects the `name`s of the inputs you want to filter by. You can have multiple targets and input names by adding multiple id's and names separated by spaces.
+Choose your form, fields to filter by and filterable list of elements with `form`, `include`, `exclude` `target` attributes. `form` and `target` attributes expect the ids of the elements you are referring to. `include` and `exclude` expect the `name`s of the inputs you want to participate in filtering. You can have multiple includes, excludes and targets by adding multiple names and id's separated by spaces.
 
 The filter attributes can be on any descendants of your target, the immediate children of your target will still get filtered based on those attributes.
 
@@ -68,7 +68,7 @@ All attributes work in combination. You can mix and match autoindexing and manua
   <input name="name-one" …>
   …
 </form>
-<filter- form="my-form" target="my-target-one my-target-two" filter-by="name-one name-two" auto-index="search">
+<filter- form="my-form" target="my-target-one my-target-two" include="name-one name-two" index="search">
   <p>…</p>
   <ul id="my-target-one">
     <li>
@@ -96,11 +96,11 @@ Optional form that you want to have the filter listen to. By default, the filter
 
 Optional space separated list of the id's of elements you want to filter. By default the filter elements filters its own children, but you can target any elements with the target attributes.
 
-### `filter-by`
+### `include` & `exclude`
 
-Optional space separated list of [`name`s of the inputs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#name) you want to filter by. By default, filtering will happen by all inputs in the form that the filter listens to.
+Optional space separated list of [`name`s of the inputs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#name) you want to filter by. By default, filtering will happen by all inputs in the form that the filter listens to. With include, you can define which exact inputs you want to only listen to. With exclude, you can define which exact inputs you don't want to participate in filtering.
 
-### `auto-index`
+### `index`
 
 ## Properties
 

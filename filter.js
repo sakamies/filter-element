@@ -1,5 +1,5 @@
 export class Filter extends HTMLElement {
-  static observedAttributes = ['form', 'target', 'filter-by', 'auto-index']
+  static observedAttributes = ['form', 'target', 'include', 'exclude', 'index']
   static debounceDelay = 50
 
   get form() {
@@ -18,8 +18,13 @@ export class Filter extends HTMLElement {
     return targets && targets.length && Array.from(targets) || [this]
   }
 
-  get #filterBy() {
-    const value = this.getAttribute('filter-by')
+  get #include() {
+    const value = this.getAttribute('include')
+    return value && value.split(' ')
+  }
+
+  get #exclude() {
+    const value = this.getAttribute('exclude')
     return value && value.split(' ')
   }
 
@@ -55,7 +60,7 @@ export class Filter extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'auto-index') {
+    if (name === 'index') {
       if (oldValue !== null) this.#autoIndex(oldValue, 'remove')
       if (newValue !== null) this.#autoIndex(newValue, 'add')
     }
@@ -87,10 +92,12 @@ export class Filter extends HTMLElement {
 
   #filterDebounced
   #filter = () => {
-    const keys = this.#filterBy
+    const includedNames = this.#include
+    const excludedNames = this.#exclude
     const data = Array.from(new FormData(this.form))
       .filter(([name, value]) => value) // Skip empty values
-      .filter(([name, value]) => !keys || keys.includes(name)) // Only consider keys in filter-by attribute if it exists.
+      .filter(([name, value]) => !includedNames || includedNames.includes(name))
+      .filter(([name, value]) => !excludedNames || !excludedNames.includes(name))
     const filterSelector = data.map(this.#getFilterSelector).join('')
 
     this.targets.map(target => {
