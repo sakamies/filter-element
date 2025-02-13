@@ -2,6 +2,12 @@
 
 A custom element for filtering a list of elements based on a form.
 
+- [Getting started](#getting-started)
+- [Kitchen sink](#kitchen-sink)
+- [Attributes](#attributes)
+- [Properties](#properties)
+- [Events](#events)
+
 ## Getting started
 
 Put `filter.js` into your project, import it and name your tag whatever you like.
