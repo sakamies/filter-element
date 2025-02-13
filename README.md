@@ -117,6 +117,8 @@ Build a manual search index by setting attributes on any descendants of your fil
 
 The attribute is your chosen tag name, a dash and the form element name you want this data to match to. For example `my-filter-search` to filter by any inputs that have the name `search`.
 
+This gives great flexibility to add attributes to the tags that hold your relevant data. Use any number of attributes that match any number of inputs.
+
 ## Properties
 
 ### `form`
