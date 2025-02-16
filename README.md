@@ -4,6 +4,7 @@ A custom element for filtering a list of elements based on a form.
 
 - [Getting started](#getting-started)
 - [Kitchen sink](#kitchen-sink)
+- [Live examples](#live-examples)
 - [Attributes](#attributes)
 - [Properties](#properties)
 - [Events](#events)
@@ -91,7 +92,13 @@ All attributes work in combination. You can mix and match autoindexing and manua
 </filter->
 ```
 
-Check for complete working examples in [index.html](https://sakamies.github.io/filter-element/index.html) and [simple.html](https://sakamies.github.io/filter-element/simple.html).
+## Live examples
+
+Check some complete working examples.
+
+- [index.html](https://sakamies.github.io/filter-element/index.html)
+- [simple.html](https://sakamies.github.io/filter-element/simple.html)
+- [combobox.html](https://sakamies.github.io/filter-element/combobox.html)
 
 ## Attributes
 
