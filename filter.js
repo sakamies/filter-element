@@ -31,7 +31,7 @@ export class Filter extends HTMLElement {
 
   constructor() {
     super()
-    this.#filterDebounced = debounce(this.#filter, Filter.debounceDelay)
+    this.#filterDebounced = debounce(this.#filterSync, Filter.debounceDelay)
     this.#handleEvent = this.#handleEvent
   }
 
@@ -91,11 +91,11 @@ export class Filter extends HTMLElement {
   }
 
   #filterDebounced
-  #filter = () => {
+  #filterSync = () => {
     const includedNames = this.#include
     const excludedNames = this.#exclude
     const data = Array.from(new FormData(this.form))
-      .filter(([name, value]) => value) // Skip empty values
+      .filter(([name, value]) => value)
       .filter(([name, value]) => !includedNames || includedNames.includes(name))
       .filter(([name, value]) => !excludedNames || !excludedNames.includes(name))
     const filterSelector = data.map(this.#getFilterSelector).join('')
@@ -104,7 +104,7 @@ export class Filter extends HTMLElement {
       const items = Array.from(target.children)
       const found = Array.from(target.querySelectorAll(':scope > ' + (filterSelector || '*')))
       const hidden = items.map(item => !found.includes(item))
-      if (!this.#dispatch(target, found, hidden)) return //Event is cancelable
+      if (!this.#dispatch(target, found, hidden)) return 
       items.map(item => item.hidden = !found.includes(item))
     })
   }
