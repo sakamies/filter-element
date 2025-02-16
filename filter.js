@@ -56,7 +56,7 @@ export class Filter extends HTMLElement {
   }
 
   #handleEvent = (e) => {
-    if (e.target.form === this.form) this.#filterDebounced()
+    if (e.target.form === this.form || e.target === this.form) this.#filterDebounced()
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
