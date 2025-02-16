@@ -2,6 +2,9 @@
 
 A custom element for filtering a list of elements based on a form.
 
+No dependencies. No CSS necessary. Works with any type and any number of inputs. Less than 1k compressed.
+
+- [Progressive enhancement](#progressive-enhancement)
 - [Getting started](#getting-started)
 - [Kitchen sink](#kitchen-sink)
 - [Live examples](#live-examples)
@@ -10,9 +13,21 @@ A custom element for filtering a list of elements based on a form.
 - [Events](#events)
 - [Licence, NPM module?](#licence-npm-module)
 
+## Progressive enhancement
+
+Now this is [the important bit](https://piccalil.li/blog/its-about-time-i-tried-to-explain-what-progressive-enhancement-actually-is/).
+
+The filter element works just fine with any server rendered markup or forms that are to be submitted. It's here to help, not to require anything of you.
+
+Filter does not add or remove elements from the DOM, but doesn't mind if you do. Everything should continue to work fine if you add/move/remove your forms, inputs, elements to be filtered, their attributes or any filter elements themselves. If you do modify your list of elements to be filtered, dispatch a change event on your form element to re-filter the list. Filter does not actively monitor DOM changes, it listens to input and change events and tries to stay out of your way.
+
+You can render your filterable list using the `hidden` attribute server side and let filter pick up from there on the front end. You can leave the list unfiltered when rendering even if the form is populated for filtering if you want the whole list to be available in case javascript is not available.
+
+Filtering will work even if CSS fails. Filter uses the [`hidden`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/hidden) attribute to show & hide elements. If you want to highlight elements instead of filtering them though, you can style your filtered elements any way you like with something like the following.
+
 ## Getting started
 
-Put `filter.js` into your project, import it and name your tag whatever you like. Filter uses the `hidden` attribute to show/hide elements and does not need any css by default.
+Put `filter.js` into your project, import it and name your tag whatever you like.
 
 ```html
 <script type="module">
@@ -92,6 +107,15 @@ All attributes work in combination. You can mix and match autoindexing and manua
 </filter->
 ```
 
+```css
+#my-list > [hidden] {
+  display: block;
+}
+#my-list > :not([hidden]) {
+  background: lemonchiffon;
+}
+```
+
 ## Live examples
 
 Check some complete working examples.
@@ -158,12 +182,12 @@ Filtering is debounced by 50ms by default, so typing quickly optimally won't gri
 
 ### `Filter.listenedEvents = ['input', 'change']`
 
-Filter listens to input and change events by default. You can listen to any events you need to, but the event needs to have a form property on its target that matches your filter element form. Filter checks internally that `event.target.form === this.form` when handling events so it will only run when necessary.
+Filter listens to input and change events by default. You can listen to any events you need to, but the event needs to originate from your form. I must have a form property on its target, or the target must be the form. Filter checks internally that `event.target.form === this.form || event.target === this.form` when handling events.
 
 ----
 
 ## Licence, NPM module?
 
-This repo does not have a licence and is not on NPM. Feel free to learn from this, fork the code or make a package. Give credit and [behave](https://www.contributor-covenant.org).
+This whole repo is more of a journey of learning and writing, not necessarily meant as a participant in the packages & components ecosystem. Though I've poured everything I know so far into this and it should be fully production ready, I'm not promising anything.
 
-I'm not sure I want to be a package maintainer.
+This repo does not have a licence and is [not on NPM](https://htmx.org/essays/vendoring/). You do not have my permission for anything, but I hope your rebel spirit will let you learn from this, to code your own and make a package. Give credit and [behave](https://www.contributor-covenant.org).
