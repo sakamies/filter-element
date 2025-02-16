@@ -2,7 +2,7 @@
 
 A custom element for filtering a list of elements based on a form.
 
-No dependencies. No CSS necessary. Works with any type and any number of inputs. Less than 1k compressed.
+No dependencies. No CSS necessary. Works with any type and any number of inputs. Less than 1k at best, about 4k as source.
 
 - [Progressive enhancement](#progressive-enhancement)
 - [Getting started](#getting-started)
