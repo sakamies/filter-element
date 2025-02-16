@@ -114,6 +114,7 @@ export class Filter extends HTMLElement {
     name = CSS.escape(name)
     value = CSS.escape(value)
 
+    // Finds matches by substring. I had :exact and :fuzzy flags, but decided to take them out until I figure out how matching should be configured. :not is still here though.
     const attrSelector = `[${this.localName}-${name}*="${value}" i]`
     const positiveSelector = `:is(${attrSelector},:has(${attrSelector}))`
     const negativeSelector = `:not(${attrSelector}):not(:has(${attrSelector}))`
