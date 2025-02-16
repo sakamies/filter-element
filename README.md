@@ -2,7 +2,7 @@
 
 A custom element for filtering a list of elements based on a form.
 
-No dependencies. No CSS necessary. Works with any type and any number of inputs. Less than 1k at best, about 4k as source.
+No dependencies. No CSS necessary. Works with any types and any number of inputs. Less than 1k at best, about 4k as source.
 
 - [Progressive enhancement](#progressive-enhancement)
 - [Getting started](#getting-started)
@@ -36,7 +36,7 @@ Put `filter.js` into your project, import it and name your tag whatever you like
 </script>
 ```
 
-Add a form to do the filtering with. Works with any type of form elements.
+Add a form to do the filtering with. Works with any types of form elements.
 
 ```html
 <form>
