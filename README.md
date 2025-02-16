@@ -123,11 +123,11 @@ This gives great flexibility to add attributes to the tags that hold your releva
 
 ### `form`
 
-The form that the filter instance listens to.
+Read only. The form that the filter instance listens to.
 
 ### `targets`
 
-Array of target elements that the filter instance is filtering.
+Read only. Array of target elements that the filter instance is filtering.
 
 ## Events
 
@@ -140,6 +140,18 @@ Any time filtering happens, the filter element will emit one event per a target 
 `event.detail.found` & `event.detail.hidden` contain the children of `target` that matched and didn't match the filter.
 
 `event.preventDefault()` will cancel the filter setting the `hidden` property on `found` and `hidden` elements.
+
+## Configuration
+
+You can set static properties on the class to change the defaults. These options will affect any new instantiated elements, not elements that already exist in the DOM.
+
+### `Filter.debounceDelay = 50`
+
+Filtering is debounced by 50ms by default, so typing quickly optimally won't grind the page to a halt on large datasets. You can adjust this by setting `Filter.debounceDelay = 100` or any number of milliseconds if you need to.
+
+### `Filter.listenedEvents = ['input', 'change']`
+
+Filter listens to input and change events by default. You can listen to any events you need to, but the event needs to have a form property on its target that matches your filter element form. Filter checks internally that `event.target.form === this.form` when handling events so it will only run when necessary.
 
 ----
 
