@@ -128,7 +128,7 @@ Check some complete working examples.
 
 ### `form`
 
-Optional form that you want to have the filter listen to. By default, the filter element finds the closest parent form, or the first form in the document. This attrigute works exactly the same as the [form attribute on input elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
+Optional form that you want to have the filter listen to. By default, the filter element finds the closest parent form, or the first form in the document. This attribute works exactly the same as the [form attribute on input elements](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#form).
 
 ### `target`
 
