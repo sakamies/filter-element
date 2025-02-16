@@ -104,7 +104,7 @@ export class Filter extends HTMLElement {
       const items = Array.from(target.children)
       const found = Array.from(target.querySelectorAll(':scope > ' + (filterSelector || '*')))
       const hidden = items.map(item => !found.includes(item))
-      if (!this.#dispatch(target, found, hidden)) return 
+      if (!this.#dispatch(target, found, hidden)) return
       items.map(item => item.hidden = !found.includes(item))
     })
   }
