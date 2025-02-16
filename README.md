@@ -21,7 +21,7 @@ The filter element works just fine with any server rendered markup or forms that
 
 Filter does not add or remove elements from the DOM, but doesn't mind if you do. Everything should continue to work fine if you add/move/remove your forms, inputs, elements to be filtered, their attributes or any filter elements themselves. If you do modify your list of elements to be filtered, dispatch a change event on your form element to re-filter the list. Filter does not actively monitor DOM changes, it listens to input and change events and tries to stay out of your way.
 
-Filtering will work even if CSS fails. Filter uses [the `hidden` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/hidden) to show & hide elements. If you want to highlight elements instead of filtering them though, you can style your filtered elements any way you like with something like the following.
+Filtering will work even if CSS fails. Filter uses [the `hidden` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/hidden) to show & hide elements.
 
 You can render your filterable list using the `hidden` attribute server side and let filter pick up from there on the front end. You can leave the list unfiltered when rendering even if the form is populated for filtering if you want the whole list to be readable in case javascript is not available.
 
