@@ -23,7 +23,7 @@ Filter does not add or remove elements from the DOM, but doesn't mind if you do.
 
 Filtering will work even if CSS fails. Filter uses [the `hidden` attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/hidden) to show & hide elements.
 
-You can render your filterable list using the `hidden` attribute server side and let filter pick up from there on the front end. You can leave the list unfiltered when rendering even if the form is populated for filtering if you want the whole list to be readable in case javascript is not available.
+You can render your filterable list using the `hidden` attribute server side and let filter pick up from there on the front end. You can leave the list unfiltered when rendering even if the form is populated for filtering if you want the whole list to be readable by your users in case javascript is not available.
 
 ## Getting started
 
