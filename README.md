@@ -190,6 +190,6 @@ Filter listens to input and change events by default. You can listen to any even
 
 ## Licence, NPM module?
 
-This whole repo is more of a journey of learning and writing, not necessarily meant as a participant in the packages & components ecosystem. Though I've poured everything I know so far into this and it should be fully production ready, I'm not promising anything.
+This whole repo is more of a journey of learning and writing, not necessarily meant as a participant in the packages & components ecosystem. Though I've poured everything I know so far into this and it should be fully production ready — *and I am using it in production* — I'm not promising anything.
 
 This repo does not have a licence and is [not on NPM](https://htmx.org/essays/vendoring/). You do not have my permission for anything, but I hope your rebel spirit will let you learn from this, to code your own and make a package. Give credit and [behave](https://www.contributor-covenant.org).
