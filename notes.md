@@ -1,16 +1,8 @@
 ## TODO
 
-- Make example with radios like crisp comboboxes, so search field plus filterable radios
-
 - Gather all matches with :is(attrshere) and send them along with the found elements, so users of the element can highlight the matches any way they want.
 
-- Some mechanism to set filtered out elements as disabled? Probs not a direct feature, but rather for any project using filterer to implement itself. Maybe add .matches and .filteredout or soemthing to the event details so you can respond to those any way you want. Maybe an optional callback for while filtering to be run for every element, would save looping everything twice. These kindsa hooks will inevitably lead to all kinds of hacks though, hooks are bad.
-
 - `case-sensitive` or `match-case` attribute? because now the search is not case sensitive.
-
-- Element default name could be filter-children
-
-- Not sure negativeSelector is completely correct for fuzzy searches
 
 ----
 
