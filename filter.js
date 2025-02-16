@@ -1,6 +1,7 @@
 export class Filter extends HTMLElement {
   static observedAttributes = ['form', 'target', 'include', 'exclude', 'index']
   static debounceDelay = 50
+  static listenedEvents = ['input', 'change']
 
   get form() {
     return document.forms[this.getAttribute('form')]
@@ -38,16 +39,16 @@ export class Filter extends HTMLElement {
   disconnectedCallback() {this.#unlisten()}
   adoptedCallback() {this.#relisten()}
 
-  #listening
+  #listening = []
   #listen() {
-    !this.#listening && document.addEventListener('input', this.#handleEvent)
-    !this.#listening && document.addEventListener('change', this.#handleEvent)
-    this.#listening = true
+    if (this.#listening.length) return
+    this.#listening = Filter.listenedEvents
+    this.#listening.forEach(name => document.addEventListener(name, this.#handleEvent))
   }
   #unlisten() {
-    document.removeEventListener('input', this.#handleEvent)
-    document.removeEventListener('change', this.#handleEvent)
-    this.#listening = false
+    if (!this.#listening.length) return
+    this.#listening.forEach(name => document.removeEventListener(name, this.#handleEvent))
+    this.#listening = []
   }
   #relisten() {
     this.#unlisten()
@@ -55,7 +56,6 @@ export class Filter extends HTMLElement {
   }
 
   #handleEvent = (e) => {
-    // if (e.target.closest(this.localName) === this) return
     if (e.target.form === this.form) this.#filterDebounced()
   }
 
