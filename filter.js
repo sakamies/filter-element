@@ -32,7 +32,6 @@ export class Filter extends HTMLElement {
   constructor() {
     super()
     this.#filterDebounced = debounce(this.#filterSync, Filter.debounceDelay)
-    this.#handleEvent = this.#handleEvent
   }
 
   connectedCallback() {this.#listen()}
