@@ -32,7 +32,7 @@ Put `filter.js` into your project, import it and name your tag whatever you like
 ```html
 <script type="module">
   import {Filter} from './filter.js'
-  customElements.define('filter-', Filter);
+  customElements.define('filter-', Filter)
 </script>
 ```
 
